@@ -1,7 +1,33 @@
 <template>
   <div>
-    <div class="hero-section">
-      <h1 class="hero-title">Stella</h1>
+    <div class="header-section">
+      <div class="cover-header">
+        <div class="header-title">Stella</div>
+        <!-- <div>
+          <a href="#" class="overlay_button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="white"
+              viewBox="0 0 16 16"
+            >
+              <text
+                x="4"
+                y="14"
+                font-family="'appetit' !important"
+                font-size="18"
+                font-style="italic"
+                font-weight="900"
+                fill="white"
+              >
+                i
+              </text>
+            </svg>
+            About
+          </a>
+        </div> -->
+      </div>
     </div>
 
     <header class="top-menu">
@@ -40,19 +66,40 @@ const scrollToSection = (id) => {
 }
 </script>
 <style scoped>
-.hero-section {
+.header-section {
   width: 100%;
-  height: 20vh;
+  height: 30vh;
   background: url('/images/bg_img.jpg') center/cover no-repeat;
+  border-bottom-left-radius: 60% 5%;
+  border-bottom-right-radius: 60% 5%;
+}
+.cover-header {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
-  font-size: 40px;
-  font-weight: bold;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+  color: #fff;
   text-align: center;
+  flex-direction: column;
 }
+.header-title {
+  font-size: 2em;
+  font-weight: 500;
+}
+/* .overlay_button {
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid #ffffff;
+  display: inline-block;
+  border-radius: 13px;
+  padding: 3px 10px;
+  font-weight: 500;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+} */
 .top-menu {
   position: sticky;
   top: 0;
@@ -102,10 +149,21 @@ const scrollToSection = (id) => {
 }
 
 @media (max-width: 768px) {
-  .hero-section {
+  .header-section {
     font-size: 28px;
-    padding: 20px;
   }
+  .cover-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .header-title {
+    font-size: 1.2em;
+  }
+  /* .overlay_button {
+    font-size: 0.4em;
+  } */
   .top-menu {
     overflow-x: auto;
     white-space: nowrap;

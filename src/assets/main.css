@@ -1,1 +1,8 @@
 @import './base.css';
+
+body {
+  color: #000;
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
+  line-height: 1.4;
+}
