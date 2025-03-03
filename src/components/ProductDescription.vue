@@ -1,5 +1,5 @@
 <template>
-  <div class="modal_overlay" @click.prevent="$emit('closeModal')">
+  <div class="modal_overlay">
     <div class="modal_content" @click.stop>
       <div class="modal_content_info">
         <div class="header_closer">

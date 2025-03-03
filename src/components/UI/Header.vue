@@ -111,7 +111,7 @@ const scrollToSection = (id) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1000;
+  z-index: 600;
 }
 
 .menu {

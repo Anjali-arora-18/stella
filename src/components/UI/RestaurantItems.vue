@@ -24,19 +24,33 @@
       :selectedProduct="selectedProduct"
       v-if="showDescription"
     />
+
+    <div class="screen_bottom_controls hide" style="opacity: 1">
+      <a href="#" class="apt_button primary view_cart_btn" @click.prevent="openCart">
+        <span class="quantity_info info_number white">1</span>
+        <span class="view_label">View cart</span>
+        <span class="price_info"
+          ><span class="currency_symbol">€</span><span class="currency_val">79.99</span></span
+        >
+      </a>
+      <CartView @closeModal="closeModal" v-show="showCart" />
+    </div>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
 import ProductDescription from '../ProductDescription.vue'
+import CartView from '../CartView.vue'
 
 export default {
   components: {
     ProductDescription,
+    CartView,
   },
   setup() {
     const showDescription = ref(false)
+    const showCart = ref(false)
     const selectedProduct = ref(null)
 
     const products = ref([
@@ -193,13 +207,20 @@ export default {
 
     const closeModal = () => {
       showDescription.value = false
+      showCart.value = false
+    }
+
+    const openCart = () => {
+      showCart.value = true
     }
 
     return {
       showDescription,
+      showCart,
       selectedProduct,
       openModal,
       closeModal,
+      openCart,
       products,
     }
   },
@@ -583,5 +604,46 @@ export default {
 }
 .screen_bottom_controls .add_to_cart_btn {
   flex: 1;
+}
+.screen_bottom_controls.hide {
+  display: block;
+}
+.screen_bottom_controls {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  background: #ffffff;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  min-height: 80px;
+  padding: 0 1em;
+  box-sizing: border-box;
+}
+.screen_bottom_controls .view_cart_btn {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+.info_number.white {
+  color: #feffff;
+  border: solid 2px #feffff;
+}
+.info_number {
+  overflow: hidden;
+  border-radius: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5em;
+  min-height: 1.5em;
+}
+.screen_bottom_controls .view_cart_btn .view_label {
+  width: 200px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
