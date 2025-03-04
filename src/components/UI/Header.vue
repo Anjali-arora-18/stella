@@ -3,30 +3,6 @@
     <div class="header-section">
       <div class="cover-header">
         <div class="header-title">Stella</div>
-        <!-- <div>
-          <a href="#" class="overlay_button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="white"
-              viewBox="0 0 16 16"
-            >
-              <text
-                x="4"
-                y="14"
-                font-family="'appetit' !important"
-                font-size="18"
-                font-style="italic"
-                font-weight="900"
-                fill="white"
-              >
-                i
-              </text>
-            </svg>
-            About
-          </a>
-        </div> -->
       </div>
     </div>
 
@@ -88,18 +64,6 @@ const scrollToSection = (id) => {
   font-size: 2em;
   font-weight: 500;
 }
-/* .overlay_button {
-  text-decoration: none;
-  color: #fff;
-  border: 1px solid #ffffff;
-  display: inline-block;
-  border-radius: 13px;
-  padding: 3px 10px;
-  font-weight: 500;
-  font-size: 0.9em;
-  display: flex;
-  align-items: center;
-} */
 .top-menu {
   position: sticky;
   top: 0;
@@ -161,9 +125,6 @@ const scrollToSection = (id) => {
   .header-title {
     font-size: 1.2em;
   }
-  /* .overlay_button {
-    font-size: 0.4em;
-  } */
   .top-menu {
     overflow-x: auto;
     white-space: nowrap;
