@@ -1,204 +1,71 @@
 <template>
-  <div class="content_ui">
-    <div class="content_items">
-      <h2 class="content_title">20% Off</h2>
-      <div class="content_item_product" v-for="(product, index) in products" :key="index">
-        <div class="product_list_item product_underline" @click="openModal(product)">
+  <div class="content_ui" v-if="groupedMenuItems">
+    <div
+      class="content_items"
+      v-for="(items, categoryName) in groupedMenuItems"
+      :key="categoryName"
+    >
+      <h2 class="content_title">{{ categoryName }}</h2>
+      <div class="content_item_product" v-for="item in items" :key="item._id">
+        <div class="product_list_item product_underline">
           <div class="item_info">
-            <div class="item_title">{{ product.title }}</div>
-            <div class="item_description">{{ product.description }}</div>
+            <div class="item_title">{{ item.name }}</div>
+            <div class="item_description">{{ item.description }}</div>
             <div class="item_price">
-              <span class="currency_symbol">$</span>
-              <span class="currency_val">{{ product.price }}</span>
+              <span class="currency_symbol">$ </span>
+              <span class="currency_val">{{ item.price }}</span>
             </div>
           </div>
           <div class="item_thumb">
-            <img :src="product.image" :alt="product.title" />
+            <img :src="item.imageUrl" :alt="item.name" />
           </div>
           <div class="product_list_item_info red"></div>
         </div>
       </div>
     </div>
-    <ProductDescription
-      @closeModal="closeModal"
-      :selectedProduct="selectedProduct"
-      v-if="showDescription"
-    />
-
-    <div class="screen_bottom_controls hide" style="opacity: 1">
-      <a href="#" class="apt_button primary view_cart_btn" @click.prevent="openCart">
-        <span class="quantity_info info_number white">1</span>
-        <span class="view_label">View cart</span>
-        <span class="price_info"
-          ><span class="currency_symbol">€</span><span class="currency_val">79.99</span></span
-        >
-      </a>
-      <CartView @closeModal="closeModal" v-show="showCart" />
-    </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import ProductDescription from '../ProductDescription.vue'
 import CartView from '../CartView.vue'
 
 export default {
+  props: ['menuItems'],
   components: {
     ProductDescription,
     CartView,
   },
-  setup() {
+  setup(props) {
     const showDescription = ref(false)
     const showCart = ref(false)
     const selectedProduct = ref(null)
 
-    const products = ref([
-      {
-        title: 'London Broil',
-        id: 1,
-        description: 'Broiling marinated beef, cut into thin strips',
-        price: '12.99',
-        image: '/images/wrap.jpg',
-        options: [
-          {
-            title: 'Variation',
-            id: 101,
-            isRequired: true,
-            caption: 'Any caption if needed',
-            multiple: false,
-            types: [
-              { name: 'Small', id: 1011, price: '1.99', description: 'Lobster bisque en croute' },
-              { name: 'Medium', id: 1012, price: '4.99', description: 'Lmk bisque en croute' },
-              { name: 'Large', id: 1013, price: '8.99', description: 'Lobster bisque en croute' },
-            ],
-          },
-          {
-            title: 'Slides',
-            id: 102,
-            isRequired: false,
-            caption: 'Any caption if needed',
-            multiple: true,
-            types: [
-              {
-                name: 'slide 1 small',
-                id: 1021,
-                price: '1.99',
-                description: 'Lobster bisque en croute',
-              },
-              {
-                name: 'Slide 2 medium',
-                id: 1022,
-                price: '4.99',
-                description: 'Lmk bisque en croute',
-              },
-              {
-                name: 'slide 3 large',
-                id: 1023,
-                price: '8.99',
-                description: 'Lobster bisque en croute',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: 'Ajiaco',
-        id: 2,
-        description: 'Colombian chicken and potato soup',
-        price: '14.99',
-        image: '/images/bg_img.jpg',
-        options: [
-          {
-            title: 'Variation',
-            id: 201,
-            isRequired: true,
-            caption: 'Any caption if needed',
-            multiple: false,
-            types: [
-              { name: 'Small', id: 2011, price: '1.99', description: 'Lobster bisque en croute' },
-              { name: 'Medium', id: 2012, price: '4.99', description: 'Lmk bisque en croute' },
-              { name: 'Large', id: 2013, price: '8.99', description: 'Lobster bisque en croute' },
-            ],
-          },
-          {
-            title: 'Slides',
-            id: 202,
-            isRequired: false,
-            caption: 'Any caption if needed',
-            multiple: true,
-            types: [
-              {
-                name: 'slide 1 small',
-                id: 2021,
-                price: '1.99',
-                description: 'Lobster bisque en croute',
-              },
-              {
-                name: 'Slide 2 medium',
-                id: 2022,
-                price: '4.99',
-                description: 'Lmk bisque en croute',
-              },
-              {
-                name: 'slide 3 large',
-                id: 2023,
-                price: '8.99',
-                description: 'Lobster bisque en croute',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: 'French Onion Soup',
-        id: 3,
-        description: 'A rich and savory soup with melted cheese',
-        price: '10.99',
-        image: '/images/wrap.jpg',
-        options: [
-          {
-            title: 'Variation',
-            id: 301,
-            isRequired: true,
-            caption: 'Any caption if needed',
-            multiple: false,
-            types: [
-              { name: 'Small', id: 3011, price: '1.99', description: 'Lobster bisque en croute' },
-              { name: 'Medium', id: 3012, price: '4.99', description: 'Lmk bisque en croute' },
-              { name: 'Large', id: 3013, price: '8.99', description: 'Lobster bisque en croute' },
-            ],
-          },
-          {
-            title: 'Slides',
-            id: 302,
-            isRequired: false,
-            caption: 'Any caption if needed',
-            multiple: true,
-            types: [
-              {
-                name: 'slide 1 small',
-                id: 3021,
-                price: '1.99',
-                description: 'Lobster bisque en croute',
-              },
-              {
-                name: 'Slide 2 medium',
-                id: 3022,
-                price: '4.99',
-                description: 'Lmk bisque en croute',
-              },
-              {
-                name: 'slide 3 large',
-                id: 3023,
-                price: '8.99',
-                description: 'Lobster bisque en croute',
-              },
-            ],
-          },
-        ],
-      },
-    ])
+    // Compute grouped menu items
+    const groupedMenuItems = computed(() => {
+      const grouped = {}
+
+      props.menuItems.forEach((item) => {
+        if (item.categories && item.categories.length > 0) {
+          item.categories.forEach((category) => {
+            const categoryName = category.name.trim() // Remove extra spaces
+            if (!grouped[categoryName]) {
+              grouped[categoryName] = []
+            }
+            grouped[categoryName].push(item)
+          })
+        } else {
+          // Items without categories go into "Uncategorized"
+          if (!grouped['Uncategorized']) {
+            grouped['Uncategorized'] = []
+          }
+          grouped['Uncategorized'].push(item)
+        }
+      })
+
+      return grouped
+    })
 
     const openModal = (product) => {
       selectedProduct.value = product
@@ -221,7 +88,7 @@ export default {
       openModal,
       closeModal,
       openCart,
-      products,
+      groupedMenuItems,
     }
   },
 }
@@ -248,7 +115,6 @@ export default {
 .product_list_item {
   display: flex;
   padding: 1em 0em;
-  cursor: pointer;
   position: relative;
 }
 .product_list_item .product_underline {

@@ -1,8 +1,12 @@
 <template>
   <div>
     <div class="header-section">
-      <div class="cover-header">
-        <div class="header-title">Stella</div>
+      <div
+        v-if="restDetails"
+        class="cover-header"
+        :style="{ background: `url(${restDetails.headerUrl})` }"
+      >
+        <!-- <div class="header-title">{{ restDetails.name }}</div> -->
       </div>
     </div>
 
@@ -11,7 +15,7 @@
         <ul class="menu">
           <li v-for="item in menuItems" :key="item.id">
             <button @click="scrollToSection(item.id)" :class="{ active: selectedItem === item.id }">
-              {{ item.label }}
+              {{ toTitleCase(item.label) }}
             </button>
           </li>
         </ul>
@@ -20,17 +24,29 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const props = defineProps({
+  categories: Array,
+  restDetails: Object,
+})
 
-const menuItems = ref([
-  { id: '20%off', label: '20% Off' },
-  { id: 'appetizers', label: 'Appetizers' },
-  { id: 'soups', label: 'Soups' },
-  { id: 'steak', label: 'Steak' },
-  { id: 'dessert', label: 'Dessert' },
-  { id: 'cocktails', label: 'Cocktails' },
-])
+const toTitleCase = (text) => {
+  if (!text) return ''
+  return text
+    .toLowerCase()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
 
+const menuItems = computed(() => {
+  return props.categories.map((category) => ({
+    id: category.wCode,
+    label: category.name,
+  }))
+})
 const selectedItem = ref(null)
 
 const scrollToSection = (id) => {
@@ -45,7 +61,6 @@ const scrollToSection = (id) => {
 .header-section {
   width: 100%;
   height: 30vh;
-  background: url('/images/bg_img.jpg') center/cover no-repeat;
   border-bottom-left-radius: 60% 5%;
   border-bottom-right-radius: 60% 5%;
 }
@@ -53,6 +68,9 @@ const scrollToSection = (id) => {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.4);
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -71,7 +89,7 @@ const scrollToSection = (id) => {
   width: 100%;
   background: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 15px 20px;
+  padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -81,7 +99,7 @@ const scrollToSection = (id) => {
 .menu {
   list-style: none;
   display: flex;
-  gap: 20px;
+  gap: 14px;
   margin: 0;
   padding: 0;
 }
@@ -121,6 +139,8 @@ const scrollToSection = (id) => {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
   }
   .header-title {
     font-size: 1.2em;

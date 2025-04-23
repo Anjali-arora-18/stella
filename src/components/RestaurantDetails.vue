@@ -1,10 +1,10 @@
 <template>
-  <div class="res-details">
+  <div v-if="restDetails" class="res-details">
     <div class="res-details-card">
       <div @click="toggle" class="res-details-card-header">
         <div class="header-content">
           <p>Table <sub>1</sub></p>
-          <h1>Takis o Leventis</h1>
+          <h1>{{ restDetails.name }}</h1>
         </div>
         <span class="toggle-icon">
           <svg
@@ -59,7 +59,21 @@
               <line x1="12" y1="6" x2="12" y2="12"></line>
               <line x1="12" y1="12" x2="16" y2="12"></line>
             </svg>
-            24 hours open
+            <!-- <div v-if="restDetails.openingTimes.selected === 'byDay'" class="space-y-1">
+              <div
+                v-for="(time, day) in restDetails.openingTimes.byDay"
+                :key="day"
+                class="flex items-center gap-2"
+              >
+                <span class="capitalize w-24">{{ day }}</span>
+                <span v-if="time.closed">Closed</span>
+                <span v-else> {{ time.opens || '--:--' }} - {{ time.closes || '--:--' }} </span>
+              </div>
+            </div> -->
+
+            {{ restDetails.openingTimes.selected }},
+            {{ restDetails.openingTimes[restDetails.openingTimes.selected].opens }} -
+            {{ restDetails.openingTimes[restDetails.openingTimes.selected].closes }}
           </dt>
           <dt class="icon-text">
             <svg
@@ -78,7 +92,7 @@
               ></path>
               <circle cx="12" cy="9" r="3"></circle>
             </svg>
-            Athalassas Ave 119C, Strovolos
+            {{ restDetails.address + ' , ' + restDetails.postcode }}
           </dt>
           <dt class="icon-text">
             <svg
@@ -95,11 +109,11 @@
               <rect x="6" y="2" width="12" height="20" rx="2" ry="2"></rect>
               <line x1="12" y1="18" x2="12" y2="18"></line>
             </svg>
-
-            77770002
+            {{ restDetails.phone }}
           </dt>
           <dt>
             <svg
+              class="icon-website"
               xmlns="http://www.w3.org/2000/svg"
               width="18"
               height="18
@@ -114,8 +128,7 @@
               <circle cx="12" cy="12" r="10"></circle>
               <path d="M12 2v20M2 12h20M7 7c3-1.5 6-1.5 9 0"></path>
             </svg>
-
-            takisoleventis.com
+            {{ restDetails.website }}
           </dt>
         </dl>
       </div>
@@ -127,6 +140,7 @@
 import { ref } from 'vue'
 
 export default {
+  props: ['restDetails'],
   setup() {
     const isOpen = ref(false)
 
@@ -150,7 +164,6 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
 .res-details-card-header {
   background: #fff;
   padding: 1em 1em;

@@ -7,6 +7,9 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), vueDevTools()],
+  server: {
+    allowedHosts: ['test.stella.cy', 'bikaner.stella.cy', '*.s'],
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
