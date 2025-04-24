@@ -8,7 +8,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   plugins: [vue(), vueDevTools()],
   server: {
-    allowedHosts: ['test.stella.cy', 'bikaner.stella.cy', '*.s'],
+    allowedHosts: ['sagetest.stella.com', 'bikaner.stella.cy', '*.stella.cy'],
   },
   resolve: {
     alias: {

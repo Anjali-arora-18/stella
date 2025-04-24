@@ -1,11 +1,7 @@
 <template>
-  <div class="content_ui" v-if="groupedMenuItems">
-    <div
-      class="content_items"
-      v-for="(items, categoryName) in groupedMenuItems"
-      :key="categoryName"
-    >
-      <h2 class="content_title">{{ categoryName }}</h2>
+  <div class="content_ui" v-if="menuItems">
+    <div class="content_items" v-for="(items, categoryName) in menuItems" :key="categoryName">
+      <h2 :id="items[0].category_id" class="content_title">{{ categoryName }}</h2>
       <div class="content_item_product" v-for="item in items" :key="item._id">
         <div class="product_list_item product_underline">
           <div class="item_info">
@@ -17,7 +13,7 @@
             </div>
           </div>
           <div class="item_thumb">
-            <img :src="item.imageUrl" :alt="item.name" />
+            <img v-if="items.imageUrl" :src="item.imageUrl" :alt="item.name" />
           </div>
           <div class="product_list_item_info red"></div>
         </div>
@@ -32,7 +28,7 @@ import ProductDescription from '../ProductDescription.vue'
 import CartView from '../CartView.vue'
 
 export default {
-  props: ['menuItems'],
+  props: ['menuItems', 'selectedCategory'],
   components: {
     ProductDescription,
     CartView,
@@ -41,31 +37,6 @@ export default {
     const showDescription = ref(false)
     const showCart = ref(false)
     const selectedProduct = ref(null)
-
-    // Compute grouped menu items
-    const groupedMenuItems = computed(() => {
-      const grouped = {}
-
-      props.menuItems.forEach((item) => {
-        if (item.categories && item.categories.length > 0) {
-          item.categories.forEach((category) => {
-            const categoryName = category.name.trim() // Remove extra spaces
-            if (!grouped[categoryName]) {
-              grouped[categoryName] = []
-            }
-            grouped[categoryName].push(item)
-          })
-        } else {
-          // Items without categories go into "Uncategorized"
-          if (!grouped['Uncategorized']) {
-            grouped['Uncategorized'] = []
-          }
-          grouped['Uncategorized'].push(item)
-        }
-      })
-
-      return grouped
-    })
 
     const openModal = (product) => {
       selectedProduct.value = product
@@ -88,7 +59,6 @@ export default {
       openModal,
       closeModal,
       openCart,
-      groupedMenuItems,
     }
   },
 }
