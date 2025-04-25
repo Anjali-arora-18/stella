@@ -1,7 +1,9 @@
 <template>
   <div class="content_ui" v-if="menuItems">
-    <div class="content_items" v-for="(items, categoryName) in menuItems" :key="categoryName">
-      <h2 :id="items[0].category_id" class="content_title">{{ categoryName }}</h2>
+    <div class="content_items" v-for="(items, categorydId) in menuItems" :key="categoryName">
+      <h2 :id="getCategory(categorydId).id" class="content_title">
+        {{ getCategory(categorydId).name }}
+      </h2>
       <div class="content_item_product" v-for="item in items" :key="item._id">
         <div class="product_list_item product_underline">
           <div class="item_info">
@@ -28,7 +30,7 @@ import ProductDescription from '../ProductDescription.vue'
 import CartView from '../CartView.vue'
 
 export default {
-  props: ['menuItems', 'selectedCategory'],
+  props: ['menuItems', 'selectedCategory', 'categories'],
   components: {
     ProductDescription,
     CartView,
@@ -52,10 +54,17 @@ export default {
       showCart.value = true
     }
 
+    const getCategory = (categoryId) => {
+      console.log(props)
+      const category = props.categories.find((cat) => cat._id === categoryId)
+      return category ? { name: category.name, id: category._id } : { name: '', id: null }
+    }
+
     return {
       showDescription,
       showCart,
       selectedProduct,
+      getCategory,
       openModal,
       closeModal,
       openCart,

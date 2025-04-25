@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header @getCat="getMenuItems" :restDetails="restDetails" :categories="categories" />
+    <Header :restDetails="restDetails" :categories="categories" />
     <main class="screen_content">
       <RestaurantDetails :restDetails="restDetails" />
       <RestaurantItems
@@ -26,22 +26,21 @@ const route = useRoute()
 const url = import.meta.env.VITE_APP_API_URL
 const outletName = window.location.hostname.split('.')[0]
 const getMenuItems = async (item) => {
-  selectedCategory.value = item
+  if (!selectedCategory.value) {
+    selectedCategory.value = item
+  }
   axios
     .get(`${url}menuItemsvo`, {
       params: {
         outletName: outletName,
-        categoryId: item.id,
+        categoryId: item._id,
       },
     })
     .then((response) => {
-      if (response.data.length) {
-        const name = selectedCategory.value.name.trim()
-        menuItems.value[name] = response.data.map((item) => {
-          return { ...item, category_id: selectedCategory.value.wCode }
-        })
-        console.log(menuItems.value)
-      }
+      const name = item._id
+      menuItems.value[name] = response.data.map((menu) => {
+        return { ...menu, category_id: item._id }
+      })
     })
 }
 
@@ -57,16 +56,15 @@ onMounted(async () => {
   await axios
     .get(`${url}menuCategoriesvo`, {
       params: {
-        outletName: response.data._id,
+        outletName: restDetails.value.name,
       },
     })
     .then((res) => {
       if (res.data.length) {
         categories.value = res.data
-        selectedCategory.value = res.data[0]
-        const name = selectedCategory.value.name.trim()
-        menuItems.value[name] = []
-        getMenuItems(res.data[0])
+        res.data.forEach((category) => {
+          getMenuItems(category)
+        })
       }
     })
 })

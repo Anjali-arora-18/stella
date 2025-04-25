@@ -14,7 +14,7 @@
           <li v-for="item in menuItems" :key="item.id">
             <button
               @click="scrollToSection(item)"
-              :class="{ active: selectedItem && selectedItem.id === item.id }"
+              :class="{ active: selectedItem && selectedItem === item.id }"
             >
               {{ toTitleCase(item.label) }}
             </button>
@@ -24,7 +24,7 @@
           <li v-for="item in subCategories" :key="item.id">
             <button
               @click="scrollToSubSection(item.id)"
-              :class="{ active: selectedItem && selectedItem.id === item.id }"
+              :class="{ active: selectedItem && selectedItem === item.id }"
             >
               {{ toTitleCase(item.label) }}
             </button>
@@ -35,11 +35,11 @@
   </div>
 </template>
 <script setup>
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount, watch, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const emits = defineEmits(['getCat'])
-const categoryHeader = ref(null)
+const categoryHeader = useTemplateRef('categoryHeader')
 const isSticky = ref(false)
 const headerHeight = ref(0)
 let headerOffsetTop = 0
@@ -61,11 +61,21 @@ const toTitleCase = (text) => {
 const menuItems = computed(() => {
   return props.categories.map((category) => ({
     id: category._id,
-    _id: category.wCode,
+    _id: category._id,
     name: category.name,
     label: category.name,
   }))
 })
+
+watch(
+  menuItems,
+  (newVal) => {
+    if (newVal.length && !selectedItem.value) {
+      selectedItem.value = newVal[0].id
+    }
+  },
+  { immediate: true },
+)
 
 const subCategories = computed(() => {
   if (selectedItem.value) {
@@ -85,9 +95,13 @@ const selectedItem = ref(null)
 const scrollToSection = (item) => {
   selectedItem.value = item._id
   const section = document.getElementById(item._id)
-  emits('getCat', item)
   if (section) {
-    const offset = (categoryHeader.value?.offsetHeight || 0) + 10
+    let offset = (categoryHeader.value?.offsetHeight || 0) + 10
+    console.log(offset)
+    if (!isSticky.value) {
+      offset = 120
+    }
+    console.log('offset', offset)
     const y = section.getBoundingClientRect().top + window.scrollY - offset
     window.scrollTo({ top: y, behavior: 'smooth' })
   }
@@ -96,7 +110,10 @@ const scrollToSubSection = (id) => {
   selectedItem.value = id
   const section = document.getElementById(id)
   if (section) {
-    const offset = (categoryHeader.value?.offsetHeight || 0) + 10
+    let offset = (categoryHeader.value?.offsetHeight || 0) + 10
+    if (!isSticky.value) {
+      offset -= 50
+    }
     const y = section.getBoundingClientRect().top + window.scrollY - offset
     window.scrollTo({ top: y, behavior: 'smooth' })
   }
