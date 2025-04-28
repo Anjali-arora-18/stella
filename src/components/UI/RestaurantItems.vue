@@ -1,6 +1,6 @@
 <template>
   <div class="content_ui" v-if="menuItems">
-    <div class="content_items" v-for="(items, categorydId) in menuItems" :key="categoryName">
+    <div class="content_items" v-for="(items, categorydId) in menuItems" :key="items">
       <h2 :id="getCategory(categorydId).id" class="content_title">
         {{ getCategory(categorydId).name }}
       </h2>
@@ -55,7 +55,6 @@ export default {
     }
 
     const getCategory = (categoryId) => {
-      console.log(props)
       const category = props.categories.find((cat) => cat._id === categoryId)
       return category ? { name: category.name, id: category._id } : { name: '', id: null }
     }

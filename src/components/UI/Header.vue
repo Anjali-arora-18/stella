@@ -13,6 +13,7 @@
         <ul class="menu">
           <li v-for="item in menuItems" :key="item.id">
             <button
+              :ref="item.id"
               @click="scrollToSection(item)"
               :class="{ active: selectedItem && selectedItem === item.id }"
             >
@@ -25,6 +26,7 @@
             <button
               @click="scrollToSubSection(item.id)"
               :class="{ active: selectedItem && selectedItem === item.id }"
+              class="sub-category"
             >
               {{ toTitleCase(item.label) }}
             </button>
@@ -42,6 +44,7 @@ const emits = defineEmits(['getCat'])
 const categoryHeader = useTemplateRef('categoryHeader')
 const isSticky = ref(false)
 const headerHeight = ref(0)
+const selectedItem = ref(null)
 let headerOffsetTop = 0
 
 const props = defineProps({
@@ -77,6 +80,22 @@ watch(
   { immediate: true },
 )
 
+const refs = computed(() => {
+  const refObj = {}
+  menuItems.value.forEach((item) => {
+    refObj[item.id] = useTemplateRef(item.id)
+  })
+  return refObj
+})
+
+watch(selectedItem.value, (newVal) => {
+  console.log('selectedItem', newVal)
+  refs[newVal].scrollIntoView({
+    behavior: 'smooth',
+    block: 'start',
+  })
+})
+
 const subCategories = computed(() => {
   if (selectedItem.value) {
     const item = props.categories.find((a) => a._id === selectedItem.value)
@@ -90,7 +109,6 @@ const subCategories = computed(() => {
   }
   return []
 })
-const selectedItem = ref(null)
 
 const scrollToSection = (item) => {
   selectedItem.value = item._id
@@ -120,7 +138,42 @@ const scrollToSubSection = (id) => {
 }
 const handleScroll = () => {
   isSticky.value = window.scrollY >= headerOffsetTop
+  const mostVisibleId = getMostVisibleElementId()
+  if (mostVisibleId) {
+    selectedItem.value = mostVisibleId
+  }
 }
+function getMostVisibleElementId() {
+  // Get all elements with IDs
+  const elements = Array.from(document.querySelectorAll('[id]')).filter((el) => el.id !== 'app')
+  let maxVisibleArea = 0
+  let mostVisibleElement = null
+
+  elements.forEach((element) => {
+    // Get element's rectangle
+    const rect = element.getBoundingClientRect()
+
+    // Calculate visible area
+    const viewHeight = window.innerHeight
+    const viewWidth = window.innerWidth
+
+    // Calculate intersection with viewport
+    const visibleHeight = Math.min(rect.bottom, viewHeight) - Math.max(rect.top, 0)
+    const visibleWidth = Math.min(rect.right, viewWidth) - Math.max(rect.left, 0)
+
+    // Calculate visible area
+    const visibleArea = visibleHeight * visibleWidth
+
+    // Update if this element has larger visible area
+    if (visibleArea > maxVisibleArea) {
+      maxVisibleArea = visibleArea
+      mostVisibleElement = element
+    }
+  })
+
+  return mostVisibleElement ? mostVisibleElement.id : null
+}
+
 onMounted(() => {
   if (categoryHeader.value) {
     headerOffsetTop = categoryHeader.value.offsetTop
@@ -200,8 +253,11 @@ onBeforeUnmount(() => {
   color: #323232;
   transition: all 0.3s ease-in-out;
   padding: 8px;
-  border-radius: 20px;
+  border-radius: 8px;
   border-bottom: none;
+}
+.menu li .sub-category {
+  border-radius: 16px;
 }
 
 .menu li button:hover {
