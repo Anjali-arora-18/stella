@@ -1,23 +1,44 @@
 <template>
-  <div class="content_ui" v-if="menuItems">
-    <div class="content_items" v-for="(items, categorydId) in menuItems" :key="items">
-      <h2 :id="getCategory(categorydId).id" class="content_title">
-        {{ getCategory(categorydId).name }}
-      </h2>
-      <div class="content_item_product" v-for="item in items" :key="item._id">
-        <div class="product_list_item product_underline">
-          <div class="item_info">
-            <div class="item_title">{{ item.name }}</div>
-            <div class="item_description">{{ item.description }}</div>
-            <div class="item_price">
-              <span class="currency_symbol">$ </span>
-              <span class="currency_val">{{ item.price }}</span>
+  <div class="content_ui" v-if="categories.length">
+    <div>
+      <div class="content_items" v-for="category in categories" :key="category._id">
+        <h2 :id="category._id" class="content_title">{{ category.name }}</h2>
+        <div v-for="subCategory in category.subCategories" :key="subCategory._id">
+          <h3 :id="`subCategories-${subCategory._id}`" class="content_title">
+            {{ subCategory.name }}
+          </h3>
+          <div class="content_item_product" v-for="item in subCategory.menuItems" :key="item._id">
+            <div class="product_list_item product_underline">
+              <div class="item_info">
+                <div class="item_title">{{ item.name }}</div>
+                <div class="item_description">{{ item.description }}</div>
+                <div class="item_price">
+                  <span class="currency_symbol">$ </span>
+                  <span class="currency_val">{{ item.price }}</span>
+                </div>
+              </div>
+              <div class="item_thumb">
+                <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" />
+              </div>
+              <div class="product_list_item_info red"></div>
             </div>
           </div>
-          <div class="item_thumb">
-            <img v-if="items.imageUrl" :src="item.imageUrl" :alt="item.name" />
+        </div>
+        <div class="content_item_product" v-for="item in category.menuItems" :key="item._id">
+          <div class="product_list_item product_underline">
+            <div class="item_info">
+              <div class="item_title">{{ item.name }}</div>
+              <div class="item_description">{{ item.description }}</div>
+              <div class="item_price">
+                <span class="currency_symbol">$ </span>
+                <span class="currency_val">{{ item.price }}</span>
+              </div>
+            </div>
+            <div class="item_thumb">
+              <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" />
+            </div>
+            <div class="product_list_item_info red"></div>
           </div>
-          <div class="product_list_item_info red"></div>
         </div>
       </div>
     </div>
@@ -30,7 +51,7 @@ import ProductDescription from '../ProductDescription.vue'
 import CartView from '../CartView.vue'
 
 export default {
-  props: ['menuItems', 'selectedCategory', 'categories'],
+  props: ['selectedCategory', 'categories'],
   components: {
     ProductDescription,
     CartView,
@@ -54,16 +75,10 @@ export default {
       showCart.value = true
     }
 
-    const getCategory = (categoryId) => {
-      const category = props.categories.find((cat) => cat._id === categoryId)
-      return category ? { name: category.name, id: category._id } : { name: '', id: null }
-    }
-
     return {
       showDescription,
       showCart,
       selectedProduct,
-      getCategory,
       openModal,
       closeModal,
       openCart,

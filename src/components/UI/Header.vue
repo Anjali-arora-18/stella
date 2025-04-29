@@ -13,7 +13,7 @@
         <ul class="menu">
           <li v-for="item in menuItems" :key="item.id">
             <button
-              :ref="item.id"
+              :id="`category-${item._id}`"
               @click="scrollToSection(item)"
               :class="{ active: selectedItem && selectedItem === item.id }"
             >
@@ -25,7 +25,7 @@
           <li v-for="item in subCategories" :key="item.id">
             <button
               @click="scrollToSubSection(item.id)"
-              :class="{ active: selectedItem && selectedItem === item.id }"
+              :class="{ active: selectedSubCategory && selectedSubCategory === item.id }"
               class="sub-category"
             >
               {{ toTitleCase(item.label) }}
@@ -45,6 +45,7 @@ const categoryHeader = useTemplateRef('categoryHeader')
 const isSticky = ref(false)
 const headerHeight = ref(0)
 const selectedItem = ref(null)
+const selectedSubCategory = ref(null)
 let headerOffsetTop = 0
 
 const props = defineProps({
@@ -115,18 +116,17 @@ const scrollToSection = (item) => {
   const section = document.getElementById(item._id)
   if (section) {
     let offset = (categoryHeader.value?.offsetHeight || 0) + 10
-    console.log(offset)
+
     if (!isSticky.value) {
       offset = 120
     }
-    console.log('offset', offset)
     const y = section.getBoundingClientRect().top + window.scrollY - offset
     window.scrollTo({ top: y, behavior: 'smooth' })
   }
 }
 const scrollToSubSection = (id) => {
   selectedItem.value = id
-  const section = document.getElementById(id)
+  const section = document.getElementById(`subCategories-${id}`)
   if (section) {
     let offset = (categoryHeader.value?.offsetHeight || 0) + 10
     if (!isSticky.value) {
@@ -139,13 +139,68 @@ const scrollToSubSection = (id) => {
 const handleScroll = () => {
   isSticky.value = window.scrollY >= headerOffsetTop
   const mostVisibleId = getMostVisibleElementId()
+  const mostVisibleSubCategoryId = getMostVisibleElementSubCategoriesId()
+  if (mostVisibleSubCategoryId) {
+    selectedSubCategory.value = mostVisibleSubCategoryId.split('-')[1]
+    console.log(selectedSubCategory.value)
+  }
+
   if (mostVisibleId) {
     selectedItem.value = mostVisibleId
+    const element = document.getElementById(`category-${mostVisibleId}`)
+    if (element) {
+      const parent = element.parentElement.parentElement.parentElement.parentElement // getting header width
+      const elementLeft = element.offsetLeft
+      const elementWidth = element.offsetWidth
+      const containerWidth = parent.offsetWidth
+      const scrollLeft = parent.scrollLeft
+      if (elementLeft < scrollLeft || elementLeft + elementWidth > scrollLeft + containerWidth) {
+        parent.scrollTo({
+          left: elementLeft - containerWidth / 2 + elementWidth / 2,
+          behavior: 'smooth',
+        })
+      }
+    }
   }
 }
 function getMostVisibleElementId() {
   // Get all elements with IDs
-  const elements = Array.from(document.querySelectorAll('[id]')).filter((el) => el.id !== 'app')
+  const elements = Array.from(document.querySelectorAll('[id]')).filter(
+    (el) => el.id !== 'app' && !el.id.startsWith('subCategories-'),
+  )
+  let maxVisibleArea = 0
+  let mostVisibleElement = null
+
+  elements.forEach((element) => {
+    // Get element's rectangle
+    const rect = element.getBoundingClientRect()
+
+    // Calculate visible area
+    const viewHeight = window.innerHeight
+    const viewWidth = window.innerWidth
+
+    // Calculate intersection with viewport
+    const visibleHeight = Math.min(rect.bottom, viewHeight) - Math.max(rect.top, 20)
+    const visibleWidth = Math.min(rect.right, viewWidth) - Math.max(rect.left, 20)
+
+    // Calculate visible area
+    const visibleArea = visibleHeight * visibleWidth
+
+    // Update if this element has larger visible area
+    if (visibleArea > maxVisibleArea) {
+      maxVisibleArea = visibleArea
+      mostVisibleElement = element
+    }
+  })
+
+  return mostVisibleElement ? mostVisibleElement.id : null
+}
+
+function getMostVisibleElementSubCategoriesId() {
+  // Get all elements with IDs
+  const elements = Array.from(document.querySelectorAll('[id]')).filter(
+    (el) => el.id !== 'app' && el.id.startsWith('subCategories-'),
+  )
   let maxVisibleArea = 0
   let mostVisibleElement = null
 
