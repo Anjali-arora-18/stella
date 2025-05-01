@@ -70,10 +70,11 @@
                 <span v-else> {{ time.opens || '--:--' }} - {{ time.closes || '--:--' }} </span>
               </div>
             </div> -->
-
-            {{ restDetails.openingTimes.selected }},
-            {{ restDetails.openingTimes[restDetails.openingTimes.selected].opens }} -
-            {{ restDetails.openingTimes[restDetails.openingTimes.selected].closes }}
+            <div v-if="restDetails.openingTimes.selected">
+              {{ restDetails.openingTimes.selected }},
+              {{ restDetails.openingTimes[restDetails.openingTimes.selected].opens }} -
+              {{ restDetails.openingTimes[restDetails.openingTimes.selected].closes }}
+            </div>
           </dt>
           <dt class="icon-text">
             <svg
