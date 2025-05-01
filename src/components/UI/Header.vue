@@ -12,7 +12,7 @@
       <nav>
         <ul class="menu">
           <li v-for="item in menuItems" :key="item.id">
-            <buttonopens
+            <button
               :id="`category-${item._id}`"
               @click="scrollToSection(item)"
               :class="{ active: selectedItem && selectedItem === item.id }"
