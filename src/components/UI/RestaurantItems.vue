@@ -12,9 +12,9 @@
               <div class="item_info">
                 <div class="item_title">{{ item.name }}</div>
                 <div class="item_description">{{ item.description }}</div>
-                <div class="item_price">
-                  <span class="currency_symbol">$ </span>
-                  <span class="currency_val">{{ item.price }}</span>
+                <div class="item_price" v-if="parseFloat(item.price)">
+                  <span class="currency_symbol">€ </span>
+                  <span class="currency_val">{{ parseFloat(item.price).toFixed(2) }}</span>
                 </div>
               </div>
               <div class="item_thumb">
@@ -29,9 +29,9 @@
             <div class="item_info">
               <div class="item_title">{{ item.name }}</div>
               <div class="item_description">{{ item.description }}</div>
-              <div class="item_price">
-                <span class="currency_symbol">$ </span>
-                <span class="currency_val">{{ item.price }}</span>
+              <div class="item_price" v-if="parseFloat(item.price)">
+                <span class="currency_symbol">€ </span>
+                <span class="currency_val">{{ parseFloat(item.price).toFixed(2) }}</span>
               </div>
             </div>
             <div class="item_thumb">
