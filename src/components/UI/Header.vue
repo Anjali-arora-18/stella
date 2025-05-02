@@ -275,21 +275,21 @@ onBeforeUnmount(() => {
 
 .header-section {
   width: 100%;
-  height: 30vh;
+  /* height: 30vh; */
   overflow: hidden;
   background-color: white;
 }
 .cover-header {
   width: 100%;
   height: 100%;
+  max-height: 400px;
+  aspect-ratio: 4 / 3;
   position: relative;
   overflow: hidden !important;
   background-size: cover !important;
-  /* background-position: center center; */
   background-repeat: no-repeat !important;
   border-bottom-left-radius: 60% 5%;
   border-bottom-right-radius: 60% 5%;
-  /* background-position: center; */
 }
 .header-section .cover-header .header-overlay {
   background: rgba(0, 0, 0, 0.4);
@@ -337,7 +337,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .header-section {
-    height: 180px;
+    /* height: 180px; */
   }
   .cover-header {
     background-size: cover !important;

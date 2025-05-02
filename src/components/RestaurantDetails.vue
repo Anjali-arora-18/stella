@@ -110,7 +110,9 @@
               <rect x="6" y="2" width="12" height="20" rx="2" ry="2"></rect>
               <line x1="12" y1="18" x2="12" y2="18"></line>
             </svg>
-            {{ restDetails.phone }}
+            <a :href="`tel:${restDetails.phone}`" class="phone-link">
+              {{ restDetails.phone }}
+            </a>
           </dt>
           <dt>
             <svg
@@ -237,7 +239,7 @@ dt svg {
   margin-right: 8px;
 }
 dt:nth-of-type(n + 3) {
-  color: #deb447;
-  text-decoration: underline;
+  color: #deb447 !important;
+  cursor: pointer;
 }
 </style>

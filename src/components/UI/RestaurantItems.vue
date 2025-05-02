@@ -94,6 +94,7 @@ export default {
 .content_ui {
   padding: 0em 0em;
   background: #f7f7f7;
+  margin-top: 0px !important;
 }
 .content_items {
   margin-bottom: 20px;
