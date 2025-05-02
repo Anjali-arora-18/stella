@@ -5,7 +5,9 @@
         v-if="restDetails"
         class="cover-header"
         :style="{ background: `url(${restDetails.headerUrl})` }"
-      ></div>
+      >
+        <div class="header-overlay"></div>
+      </div>
     </div>
     <div :style="{ height: isSticky ? `${headerHeight}px` : '0px' }"></div>
     <header :class="{ 'sticky-category': isSticky }" ref="categoryHeader" class="category-header">
@@ -274,22 +276,25 @@ onBeforeUnmount(() => {
 .header-section {
   width: 100%;
   height: 30vh;
-  border-bottom-left-radius: 60% 5%;
-  border-bottom-right-radius: 60% 5%;
+  overflow: hidden;
+  background-color: white;
 }
 .cover-header {
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  background-size: contain !important;
-  background-position: center !important;
+  position: relative;
+  overflow: hidden !important;
+  background-size: cover !important;
+  /* background-position: center center; */
   background-repeat: no-repeat !important;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  text-align: center;
-  flex-direction: column;
+  border-bottom-left-radius: 60% 5%;
+  border-bottom-right-radius: 60% 5%;
+  /* background-position: center; */
+}
+.header-section .cover-header .header-overlay {
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
 }
 .menu {
   list-style: none;
@@ -332,15 +337,10 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .header-section {
-    font-size: 28px;
+    height: 180px;
   }
   .cover-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
+    background-size: cover !important;
   }
   .category-header {
     overflow-x: auto;
