@@ -1,12 +1,11 @@
 <template>
   <div ref="pageContainer" class="page-container" @scroll.passive="onScroll">
     <div class="header-section">
-      <div
-        v-if="restDetails"
-        class="cover-header"
-        :style="{ background: `url(${restDetails.headerUrl})` }"
-      >
+      <div v-if="restDetails" class="cover-header" :style="headerBackgroundStyle">
         <div class="header-overlay"></div>
+        <div class="logo-container">
+          <img :src="restDetails.logoUrl" alt="Restaurant Logo" class="restaurant-logo" />
+        </div>
       </div>
     </div>
     <div :style="{ height: isSticky ? `${headerHeight}px` : '0px' }"></div>
@@ -18,6 +17,9 @@
               :id="`category-${item._id}`"
               @click="scrollToSection(item)"
               :class="{ active: selectedItem && selectedItem === item.id }"
+              @mouseenter="onMouseEnter(selectedItem === item.id)"
+              @mouseleave="onMouseLeave"
+              :style="getButtonStyle(selectedItem === item.id)"
             >
               {{ toTitleCase(item.label) }}
             </button>
@@ -28,6 +30,7 @@
             <button
               @click="scrollToSubSection(item.id)"
               :class="{ active: selectedSubCategory && selectedSubCategory === item.id }"
+              :style="getButtonStyle(selectedSubCategory === item.id)"
               class="sub-category"
             >
               {{ toTitleCase(item.label) }}
@@ -48,12 +51,33 @@ const isSticky = ref(false)
 const headerHeight = ref(0)
 const selectedItem = ref(null)
 const selectedSubCategory = ref(null)
-let headerOffsetTop = 0
+let headerOffsetTop = 150
 
 const props = defineProps({
   categories: Array,
   restDetails: Object,
 })
+
+const headerBackgroundStyle = computed(() => {
+  if (!props.restDetails) return {}
+
+  const hasHeaderImage = props.restDetails.headerUrl && props.restDetails.headerUrl !== ''
+  return hasHeaderImage
+    ? {
+        background: `url(${props.restDetails.headerUrl})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+      }
+    : { backgroundColor: props.restDetails.headerColor }
+})
+
+const getButtonStyle = (isActive) => {
+  const color = props.restDetails?.primaryColor || '#d9534f'
+  return {
+    backgroundColor: isActive ? color : '#f0f0f0',
+    color: isActive ? '#fff' : '#323232',
+  }
+}
 
 const toTitleCase = (text) => {
   if (!text) return ''
@@ -139,6 +163,10 @@ const scrollToSubSection = (id) => {
   }
 }
 const handleScroll = () => {
+  if (categoryHeader.value) {
+    headerOffsetTop = categoryHeader.value.offsetHeight + 150
+    headerHeight.value = categoryHeader.value.offsetHeight
+  }
   isSticky.value = window.scrollY >= headerOffsetTop
   const mostVisibleId = getMostVisibleElementId()
   const mostVisibleSubCategoryId = getMostVisibleElementSubCategoriesId()
@@ -232,10 +260,6 @@ function getMostVisibleElementSubCategoriesId() {
 }
 
 onMounted(() => {
-  if (categoryHeader.value) {
-    headerOffsetTop = categoryHeader.value.offsetTop
-    headerHeight.value = categoryHeader.value.offsetHeight
-  }
   window.addEventListener('scroll', handleScroll, { passive: true })
 })
 
@@ -272,6 +296,23 @@ onBeforeUnmount(() => {
   z-index: 10;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+.logo-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  text-align: center;
+}
+
+.restaurant-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
 .header-section {
   width: 100%;
@@ -283,7 +324,7 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   max-height: 400px;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 2;
   position: relative;
   overflow: hidden !important;
   background-size: cover !important;
@@ -321,8 +362,7 @@ onBeforeUnmount(() => {
 }
 
 .menu li button:hover {
-  background-color: #e0e0e0;
-  color: #d9534f;
+  color: white !important;
 }
 
 .menu li button.active {

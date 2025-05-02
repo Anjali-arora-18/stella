@@ -102,7 +102,7 @@
               height="18"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#8d8e90"
+              :stroke="restDetails.primaryColor"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -116,28 +116,24 @@
           </dt>
           <dt>
             <a
-              :href="`${restDetails.website}`"
+              :href="`mailto:${restDetails.email}`"
               class="link"
               target="_blank"
               rel="noopener noreferrer"
+              :style="{ color: restDetails.primaryColor }"
             >
               <svg
-                class="icon-website"
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18
-              "
+                width="20"
+                height="18"
+                :fill="restDetails.primaryColor"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="#8d8e90"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
               >
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 2v20M2 12h20M7 7c3-1.5 6-1.5 9 0"></path>
+                <path
+                  d="M2 4a2 2 0 012-2h16a2 2 0 012 2v16a2 2 0 01-2 2H4a2 2 0 01-2-2V4zm2 0v.01L12 13 20 4.01V4H4zm16 2.2L12 15 4 6.2V20h16V6.2z"
+                />
               </svg>
-              {{ restDetails.website }}
+              {{ restDetails.email }}
             </a>
           </dt>
         </dl>
@@ -245,13 +241,11 @@ dt {
 dt svg {
   margin-right: 8px;
 }
-dt:nth-of-type(n + 3) {
-  color: #deb447 !important;
-  cursor: pointer;
-}
 dt .link {
-  color: #deb447 !important;
   cursor: pointer;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
