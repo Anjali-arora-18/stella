@@ -8,7 +8,10 @@
             {{ subCategory.name }}
           </h3>
           <div class="content_item_product" v-for="item in subCategory.menuItems" :key="item._id">
-            <div class="product_list_item product_underline">
+            <div
+              class="product_list_item product_underline"
+              :class="{ 'no-image': !item.imageUrl }"
+            >
               <div class="item_info">
                 <div class="item_title">{{ item.name }}</div>
                 <div class="item_description">{{ item.description }}</div>
@@ -25,7 +28,7 @@
           </div>
         </div>
         <div class="content_item_product" v-for="item in category.menuItems" :key="item._id">
-          <div class="product_list_item product_underline">
+          <div class="product_list_item product_underline" :class="{ 'no-image': !item.imageUrl }">
             <div class="item_info">
               <div class="item_title">{{ item.name }}</div>
               <div class="item_description">{{ item.description }}</div>
@@ -104,6 +107,21 @@ export default {
 }
 .content_item_product {
   border-bottom: 1px solid #efefef;
+}
+.product_list_item.no-image {
+  flex-direction: column;
+}
+.product_list_item.no-image .item_info {
+  margin-right: 0;
+  width: 100%;
+}
+.product_list_item.no-image .item_title,
+.product_list_item.no-image .item_description {
+  text-align: left;
+  width: 100%;
+}
+.product_list_item.no-image .item_thumb {
+  display: none;
 }
 .product_list_item {
   display: flex;
