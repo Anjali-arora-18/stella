@@ -8,7 +8,6 @@
         </div>
       </div>
     </div>
-    <div :style="{ height: isSticky ? `${headerHeight}px` : '0px' }"></div>
     <header :class="{ 'sticky-category': isSticky }" ref="categoryHeader" class="category-header">
       <nav>
         <ul class="menu">
