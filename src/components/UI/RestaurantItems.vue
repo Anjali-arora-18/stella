@@ -2,16 +2,39 @@
   <div class="content_ui" v-if="categories.length">
     <div>
       <div class="content_items" v-for="category in categories" :key="category._id">
-        <h2 :id="category._id" class="content_title">{{ category.name }}</h2>
-        <div v-for="subCategory in category.subCategories" :key="subCategory._id">
-          <h3
-            v-if="subCategory.menuItems.length"
-            :id="`subCategories-${subCategory._id}`"
-            class="content_title"
-          >
-            {{ subCategory.name }}
-          </h3>
-          <div class="content_item_product" v-for="item in subCategory.menuItems" :key="item._id">
+        <div :id="category._id">
+          <h2 class="content_title">{{ category.name }}</h2>
+          <div v-for="subCategory in category.subCategories" :key="subCategory._id">
+            <div :id="`subCategories-${subCategory._id}`">
+              <h3 v-if="subCategory.menuItems.length" class="content_title">
+                {{ subCategory.name }}
+              </h3>
+              <div
+                class="content_item_product"
+                v-for="item in subCategory.menuItems"
+                :key="item._id"
+              >
+                <div
+                  class="product_list_item product_underline"
+                  :class="{ 'no-image': !item.imageUrl }"
+                >
+                  <div class="item_info">
+                    <div class="item_title">{{ item.name }}</div>
+                    <div class="item_description">{{ item.description }}</div>
+                    <div class="item_price" v-if="parseFloat(item.price)">
+                      <span class="currency_symbol">€ </span>
+                      <span class="currency_val">{{ parseFloat(item.price).toFixed(2) }}</span>
+                    </div>
+                  </div>
+                  <div class="item_thumb">
+                    <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" />
+                  </div>
+                  <div class="product_list_item_info red"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="content_item_product" v-for="item in category.menuItems" :key="item._id">
             <div
               class="product_list_item product_underline"
               :class="{ 'no-image': !item.imageUrl }"
@@ -29,22 +52,6 @@
               </div>
               <div class="product_list_item_info red"></div>
             </div>
-          </div>
-        </div>
-        <div class="content_item_product" v-for="item in category.menuItems" :key="item._id">
-          <div class="product_list_item product_underline" :class="{ 'no-image': !item.imageUrl }">
-            <div class="item_info">
-              <div class="item_title">{{ item.name }}</div>
-              <div class="item_description">{{ item.description }}</div>
-              <div class="item_price" v-if="parseFloat(item.price)">
-                <span class="currency_symbol">€ </span>
-                <span class="currency_val">{{ parseFloat(item.price).toFixed(2) }}</span>
-              </div>
-            </div>
-            <div class="item_thumb">
-              <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" />
-            </div>
-            <div class="product_list_item_info red"></div>
           </div>
         </div>
       </div>

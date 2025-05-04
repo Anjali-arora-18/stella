@@ -1,5 +1,5 @@
 <template>
-  <div ref="pageContainer" class="page-container" @scroll.passive="onScroll">
+  <div ref="pageContainer" class="page-container">
     <div class="header-section">
       <div v-if="restDetails" class="cover-header" :style="headerBackgroundStyle">
         <div class="header-overlay"></div>
@@ -17,8 +17,6 @@
               :id="`category-${item._id}`"
               @click="scrollToSection(item)"
               :class="{ active: selectedItem && selectedItem === item.id }"
-              @mouseenter="onMouseEnter(selectedItem === item.id)"
-              @mouseleave="onMouseLeave"
               :style="getButtonStyle(selectedItem === item.id)"
             >
               {{ toTitleCase(item.label) }}
@@ -28,6 +26,7 @@
         <ul class="menu" v-if="subCategories.length">
           <li v-for="item in subCategories" :key="item.id">
             <button
+              v-if="item.menuItems.length"
               @click="scrollToSubSection(item.id)"
               :class="{ active: selectedSubCategory && selectedSubCategory === item.id }"
               :style="getButtonStyle(selectedSubCategory === item.id)"
@@ -72,10 +71,13 @@ const headerBackgroundStyle = computed(() => {
 })
 
 const getButtonStyle = (isActive) => {
-  const color = props.restDetails?.primaryColor || '#d9534f'
+  const primaryColor = props.restDetails?.primaryColor || '#d9534f'
+  const backgroundColor = props.restDetails?.backgroundColor || '#ffffff'
   return {
-    backgroundColor: isActive ? color : '#f0f0f0',
-    color: isActive ? '#fff' : '#323232',
+    backgroundColor: isActive ? primaryColor : '#fff',
+    border: !isActive ? `1px solid ${primaryColor}` : 'none',
+    color: isActive ? backgroundColor : primaryColor,
+    fontWeight: isActive ? 'bold' : '600',
   }
 }
 
@@ -128,7 +130,7 @@ const subCategories = computed(() => {
     const item = props.categories.find((a) => a._id === selectedItem.value)
     if (item) {
       return item.subCategories.map((e) => {
-        return { label: e.name, id: e._id }
+        return { label: e.name, id: e._id, menuItems: e.menuItems }
       })
     } else {
       return []
@@ -172,14 +174,13 @@ const handleScroll = () => {
   const mostVisibleSubCategoryId = getMostVisibleElementSubCategoriesId()
   if (mostVisibleSubCategoryId) {
     selectedSubCategory.value = mostVisibleSubCategoryId.split('-')[1]
-    console.log(selectedSubCategory.value)
   }
 
   if (mostVisibleId) {
     selectedItem.value = mostVisibleId
     const element = document.getElementById(`category-${mostVisibleId}`)
     if (element) {
-      const parent = element.parentElement.parentElement.parentElement.parentElement // getting header width
+      const parent = element.parentElement.parentElement // getting header width
       const elementLeft = element.offsetLeft
       const elementWidth = element.offsetWidth
       const containerWidth = parent.offsetWidth
@@ -268,6 +269,10 @@ onBeforeUnmount(() => {
 })
 </script>
 <style scoped>
+nav {
+  width: 100%;
+  overflow: hidden;
+}
 .page-container {
   width: 100%;
 }
@@ -343,6 +348,7 @@ onBeforeUnmount(() => {
   gap: 14px;
   margin: 0;
   padding: 6px;
+  scrollbar-width: none;
 }
 
 .menu li button {
@@ -362,13 +368,13 @@ onBeforeUnmount(() => {
 }
 
 .menu li button:hover {
-  color: white !important;
+  /* color: white !important; */
 }
 
 .menu li button.active {
-  background-color: #d9534f;
+  /* background-color: #d9534f;
   color: white;
-  font-weight: bold;
+  font-weight: bold; */
 }
 
 .content {
