@@ -4,7 +4,7 @@
     <main class="screen_content">
       <RestaurantDetails :restDetails="restDetails" />
       <RestaurantItems
-        style="margin-top: 20px"
+        style="padding-top: 20px"
         v-if="!isLoading"
         :selectedCategory="selectedCategory"
         :categories="filteredCategories"
