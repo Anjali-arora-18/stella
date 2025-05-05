@@ -366,16 +366,6 @@ nav {
   border-radius: 16px;
 }
 
-.menu li button:hover {
-  /* color: white !important; */
-}
-
-.menu li button.active {
-  /* background-color: #d9534f;
-  color: white;
-  font-weight: bold; */
-}
-
 .content {
   padding-top: 20px;
 }

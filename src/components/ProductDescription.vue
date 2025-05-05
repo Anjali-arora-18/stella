@@ -1,25 +1,30 @@
 <template>
-  <div class="modal_overlay">
-    <div class="modal_content" @click.stop>
+  <div class="modal_overlay" v-if="product">
+    <div class="modal_content">
       <div class="modal_content_info">
         <div class="header_closer">
           <a class="close_btn" href="#" @click.prevent="$emit('closeModal')">
             <span>✕</span>
           </a>
         </div>
-        <img class="modal_image" :src="selectedProduct.image" :alt="selectedProduct.title" />
+        <img
+          class="modal_image"
+          v-if="product.imageUrl"
+          :src="product.imageUrl"
+          :alt="product.name"
+        />
         <div class="product_info">
           <div class="content">
-            <div class="product_name">{{ selectedProduct.title }}</div>
+            <div class="product_name">{{ product.name }}</div>
             <div class="product_price_info">
               from
-              <span class="product_currency">$</span>
-              <span class="product_price">{{ selectedProduct.price }}</span>
+              <span class="product_currency">€ </span>
+              <span class="product_price">{{ parseFloat(product.price).toFixed(2) }}</span>
             </div>
           </div>
-          <div class="product_description">{{ selectedProduct.description }}</div>
+          <div class="product_description">{{ product.description }}</div>
         </div>
-        <div class="product_content_ui">
+        <!-- <div class="product_content_ui">
           <div
             class="screen_bottom_controls"
             style="opacity: 1; display: block"
@@ -43,11 +48,7 @@
               Add to cart
             </button>
           </div>
-          <div
-            class="product_widget"
-            v-for="(variation, index) in selectedProduct.options"
-            :key="index"
-          >
+          <div class="product_widget" v-for="(variation, index) in product.options" :key="index">
             <div class="widget_info">
               <div class="widget_title">{{ variation.title }}</div>
               <div v-if="variation.isRequired" class="options_required_info">1 Required</div>
@@ -94,7 +95,7 @@
             <div class="label">Additional notes</div>
             <textarea class="if_textarea_input additional_notes" spellcheck="false"></textarea>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -104,7 +105,10 @@ import { ref } from 'vue'
 import { useCartStore } from '@/stores/cart'
 export default {
   props: {
-    selectedProduct: Array,
+    product: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const selectedVariation = ref([])
@@ -128,14 +132,14 @@ export default {
 
     const addToCart = () => {
       const items = {
-        id: props.selectedProduct.id,
+        id: props.product.id,
         count: count.value,
-        title: props.selectedProduct.title,
-        image: props.selectedProduct.image,
+        name: props.product.name,
+        imageUrl: props.product.imageUrl,
         options: [],
       }
 
-      props.selectedProduct.options.forEach((option) => {
+      props.product.options.forEach((option) => {
         const options = option
         const selectedOption = selectedVariation.value[option.id]
         if (selectedOption) {
@@ -227,6 +231,8 @@ export default {
   display: block;
   border-bottom-left-radius: 60% 5%;
   border-bottom-right-radius: 60% 5%;
+  background-size: cover;
+  background-position: center center;
 }
 .modal_content_info {
   padding-bottom: 5em;

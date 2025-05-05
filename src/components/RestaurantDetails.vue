@@ -448,7 +448,7 @@ dt {
 }
 
 dt svg {
-  margin-right: 8px;
+  margin-right: 14px;
 }
 dt .link {
   cursor: pointer;

@@ -13,6 +13,7 @@
                 class="content_item_product"
                 v-for="item in subCategory.menuItems"
                 :key="item._id"
+                @click="openModal(item)"
               >
                 <div
                   class="product_list_item product_underline"
@@ -34,7 +35,12 @@
               </div>
             </div>
           </div>
-          <div class="content_item_product" v-for="item in category.menuItems" :key="item._id">
+          <div
+            class="content_item_product"
+            v-for="item in category.menuItems"
+            :key="item._id"
+            @click="openModal(item)"
+          >
             <div
               class="product_list_item product_underline"
               :class="{ 'no-image': !item.imageUrl }"
@@ -56,6 +62,11 @@
         </div>
       </div>
     </div>
+    <ProductDescription
+      v-if="selectedProduct"
+      :product="selectedProduct"
+      @closeModal="selectedProduct = null"
+    />
   </div>
 </template>
 
@@ -68,34 +79,71 @@ export default {
   props: ['selectedCategory', 'categories'],
   components: {
     ProductDescription,
-    CartView,
   },
-  setup(props) {
-    const showDescription = ref(false)
-    const showCart = ref(false)
+  setup() {
     const selectedProduct = ref(null)
-
     const openModal = (product) => {
       selectedProduct.value = product
-      showDescription.value = true
     }
-
     const closeModal = () => {
-      showDescription.value = false
-      showCart.value = false
+      selectedProduct.value = null
     }
-
+    const cart = ref([])
+    const cartCount = computed(() => {
+      return cart.value.reduce((total, item) => total + item.quantity, 0)
+    })
+    const cartTotal = computed(() => {
+      return cart.value.reduce((total, item) => total + item.price * item.quantity, 0)
+    })
+    const addToCart = (item) => {
+      const existingItem = cart.value.find((cartItem) => cartItem._id === item._id)
+      if (existingItem) {
+        existingItem.quantity += 1
+      } else {
+        cart.value.push({ ...item, quantity: 1 })
+      }
+    }
+    const removeFromCart = (item) => {
+      const existingItem = cart.value.find((cartItem) => cartItem._id === item._id)
+      if (existingItem) {
+        existingItem.quantity -= 1
+        if (existingItem.quantity <= 0) {
+          cart.value = cart.value.filter((cartItem) => cartItem._id !== item._id)
+        }
+      }
+    }
+    const clearCart = () => {
+      cart.value = []
+    }
+    const checkout = () => {
+      console.log('Checkout:', cart.value)
+    }
+    const showCart = ref(false)
     const openCart = () => {
       showCart.value = true
     }
+    const closeCart = () => {
+      showCart.value = false
+    }
+    // const showCart = ref(false)
+    // const openCart = () => {
+    //   showCart.value = true
+    // }
 
     return {
-      showDescription,
-      showCart,
       selectedProduct,
       openModal,
       closeModal,
+      cart,
+      cartCount,
+      cartTotal,
+      addToCart,
+      removeFromCart,
+      clearCart,
+      checkout,
+      showCart,
       openCart,
+      closeCart,
     }
   },
 }
@@ -103,7 +151,7 @@ export default {
 
 <style scoped>
 .content_ui {
-  padding: 0em 0em;
+  padding: 0em 0em !important;
   background: #f7f7f7;
   margin-top: 0px !important;
 }
@@ -125,6 +173,7 @@ export default {
 }
 .content_item_product {
   border-bottom: 1px solid #efefef;
+  cursor: pointer;
 }
 .product_list_item.no-image {
   flex-direction: column;
