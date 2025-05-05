@@ -7,12 +7,14 @@
             <span>✕</span>
           </a>
         </div>
-        <img
-          class="modal_image"
-          v-if="product.imageUrl"
-          :src="product.imageUrl"
-          :alt="product.name"
-        />
+        <div v-if="product" :style="imageBackgroundStyle">
+          <img
+            class="modal_image"
+            v-if="product.imageUrl"
+            :src="product.imageUrl"
+            :alt="product.name"
+          />
+        </div>
         <div class="product_info">
           <div class="content">
             <div class="product_name">{{ product.name }}</div>
@@ -101,10 +103,14 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useCartStore } from '@/stores/cart'
 export default {
   props: {
+    outlet: {
+      type: Object,
+      required: true,
+    },
     product: {
       type: Object,
       required: true,
@@ -158,11 +164,28 @@ export default {
       emit('closeModal')
     }
 
+    const imageBackgroundStyle = computed(() => {
+      if (!Object.keys(props.product).length) return {}
+
+      const hasHeaderImage = props.product.imageUrl && props.product.imageUrl !== ''
+      return hasHeaderImage
+        ? {
+            background: `url(${props.product.imageUrl})`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center center',
+            borderBottomLeftRadius: '60% 5%',
+            borderBottomRightRadius: '60% 5%',
+          }
+        : { backgroundColor: props.outlet.headerColor, height: '20vh' }
+    })
+
     return {
       selectedVariation,
       addToSelection,
       addToCart,
       count,
+      imageBackgroundStyle,
     }
   },
 }

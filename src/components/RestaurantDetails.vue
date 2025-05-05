@@ -59,17 +59,6 @@
               <line x1="12" y1="6" x2="12" y2="12"></line>
               <line x1="12" y1="12" x2="16" y2="12"></line>
             </svg>
-            <!-- <div v-if="restDetails.openingTimes.selected === 'byDay'" class="space-y-1">
-              <div
-                v-for="(time, day) in restDetails.openingTimes.byDay"
-                :key="day"
-                class="flex items-center gap-2"
-              >
-                <span class="capitalize w-24">{{ day }}</span>
-                <span v-if="time.closed">Closed</span>
-                <span v-else> {{ time.opens || '--:--' }} - {{ time.closes || '--:--' }} </span>
-              </div>
-            </div> -->
             <div v-if="restDetails.openingTimes" style="text-align: start">
               <div
                 v-for="line in formatOpeningHours(restDetails.openingTimes).split('\n')"
@@ -316,7 +305,6 @@ export default {
       if (openingTimes.selected === 'is24h') {
         return 'Everyday - Open 24h'
       }
-      // Group days by their opening/closing times
       const grouped = []
       let currentGroup = []
       let lastTime = null
@@ -346,7 +334,6 @@ export default {
         grouped.push({ days: currentGroup, time: lastTime })
       }
 
-      // Format grouped data
       return grouped
         .map(({ days, time }) => {
           const [opens, closes] = time.split('-')

@@ -65,6 +65,7 @@
     <ProductDescription
       v-if="selectedProduct"
       :product="selectedProduct"
+      :outlet="outlet"
       @closeModal="selectedProduct = null"
     />
   </div>
@@ -76,7 +77,7 @@ import ProductDescription from '../ProductDescription.vue'
 import CartView from '../CartView.vue'
 
 export default {
-  props: ['selectedCategory', 'categories'],
+  props: ['selectedCategory', 'categories', 'outlet'],
   components: {
     ProductDescription,
   },

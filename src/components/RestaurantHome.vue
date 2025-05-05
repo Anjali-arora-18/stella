@@ -5,6 +5,7 @@
       <RestaurantDetails :restDetails="restDetails" />
       <RestaurantItems
         style="padding-top: 20px"
+        :outlet="restDetails"
         v-if="!isLoading"
         :selectedCategory="selectedCategory"
         :categories="filteredCategories"
