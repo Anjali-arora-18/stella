@@ -6,7 +6,7 @@
           <h2 class="content_title">{{ category.name }}</h2>
           <div v-for="subCategory in category.subCategories" :key="subCategory._id">
             <div :id="`subCategories-${subCategory._id}`">
-              <h3 v-if="subCategory.menuItems.length" class="content_title">
+              <h3 v-if="subCategory.menuItems.length" class="content_sub_title">
                 {{ subCategory.name }}
               </h3>
               <div
@@ -115,6 +115,12 @@ export default {
 .content_title {
   font-size: 1.3em;
   margin: 0;
+  font-weight: bold;
+}
+.content_sub_title {
+  font-size: 1.2em;
+  margin: 0;
+  padding-top: 0.5em;
   font-weight: bold;
 }
 .content_item_product {
