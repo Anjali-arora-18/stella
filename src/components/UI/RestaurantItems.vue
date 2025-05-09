@@ -27,15 +27,16 @@
                     <div class="item_title">
                       {{ item.name }}
                     </div>
-                    <div class="allergen_icons" v-if="item.allergenIds && item.allergenIds.length">
+                    <template v-if="item.allergenIds && item.allergenIds.length">
                       <img
-                        v-for="id in item.allergenIds"
+                        v-for="(id, index) in item.allergenIds.slice(0, 5)"
                         :key="id"
                         :src="allergenIcons[id]"
                         :alt="`Allergen ${id}`"
                         class="allergen_icon"
                       />
-                    </div>
+                      <span v-if="item.allergenIds.length > 5" class="allergen_more">...</span>
+                    </template>
                     <div class="item_description">{{ item.description }}</div>
                     <div class="item_price" v-if="parseFloat(item.price)">
                       <span class="currency_symbol">€ </span>
@@ -64,15 +65,16 @@
                 <div class="item_title">
                   {{ item.name }}
                 </div>
-                <div class="allergen_icons" v-if="item.allergenIds && item.allergenIds.length">
+                <template v-if="item.allergenIds && item.allergenIds.length">
                   <img
-                    v-for="id in item.allergenIds"
+                    v-for="(id, index) in item.allergenIds.slice(0, 5)"
                     :key="id"
                     :src="allergenIcons[id]"
                     :alt="`Allergen ${id}`"
                     class="allergen_icon"
                   />
-                </div>
+                  <span v-if="item.allergenIds.length > 5" class="allergen_more">...</span>
+                </template>
                 <div class="item_description">{{ item.description }}</div>
                 <div class="item_price" v-if="parseFloat(item.price)">
                   <span class="currency_symbol">€ </span>
@@ -256,7 +258,11 @@ export default {
   width: 20px;
   margin: 0 2px;
 }
-
+.allergen_more {
+  font-size: 1em;
+  color: #999;
+  margin-left: 4px;
+}
 .product_list_item.no-image {
   flex-direction: column;
 }

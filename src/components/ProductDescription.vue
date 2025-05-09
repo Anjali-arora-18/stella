@@ -23,7 +23,18 @@
         </div>
         <div class="product_info">
           <div class="content">
-            <div class="product_name">{{ product.name }}</div>
+            <div class="product_name_and_icons">
+              <div class="product_name">{{ product.name }}</div>
+              <div class="allergen_icons" v-if="product.allergenIds && product.allergenIds.length">
+                <img
+                  v-for="id in product.allergenIds"
+                  :key="id"
+                  :src="allergenIcons[id]"
+                  :alt="`Allergen ${id}`"
+                  class="allergen_icon"
+                />
+              </div>
+            </div>
             <div class="product_price_info">
               from
               <span class="product_currency">€ </span>
@@ -136,7 +147,32 @@ export default {
           }
         : { backgroundColor: props.outlet.headerColor, height: '20vh' }
     })
-
+    const allergenIcons = {
+      1: '/allergens/vegan.png',
+      2: '/allergens/plant_based.png',
+      3: '/allergens/vegetarian.png',
+      4: '/allergens/pescatarian.png',
+      5: '/allergens/spicy.png',
+      6: '/allergens/halal.png',
+      7: '/allergens/kosher.png',
+      8: '/allergens/gluten_free.png',
+      9: '/allergens/dairy_free.png',
+      10: '/allergens/nut_free.png',
+      11: '/allergens/gluten.png',
+      12: '/allergens/crustaceans.png',
+      13: '/allergens/eggs.png',
+      14: '/allergens/fish.png',
+      15: '/allergens/peanuts.png',
+      16: '/allergens/soybeans.png',
+      17: '/allergens/milk.png',
+      18: '/allergens/nuts.png',
+      19: '/allergens/celery.png',
+      20: '/allergens/mustard.png',
+      21: '/allergens/sesame_seeds.png',
+      22: '/allergens/sulphur_dioxide.png',
+      23: '/allergens/lupin.png',
+      24: '/allergens/molluscs.png',
+    }
     return {
       selectedVariation,
       addToSelection,
@@ -146,6 +182,7 @@ export default {
       handleTouchStart,
       handleTouchMove,
       handleTouchEnd,
+      allergenIcons,
     }
   },
 }
@@ -187,7 +224,16 @@ export default {
     transform: translateY(0);
   }
 }
-
+.allergen_icons {
+  margin: 0.2em 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+.allergen_icon {
+  height: 20px;
+  width: 20px;
+  margin-right: 4px;
+}
 .header_closer {
   position: absolute;
   left: 1em;
@@ -235,6 +281,14 @@ export default {
 .content {
   display: flex;
   margin-bottom: 0.7em;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.product_name_and_icons {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 0.7em;
 }
 .product_name {
   flex: 1;
@@ -245,6 +299,7 @@ export default {
 .product_price_info {
   flex-shrink: 0;
   font-weight: bold;
+  text-align: right;
 }
 .product_price_info span {
   font-weight: bold;
