@@ -255,20 +255,25 @@ export default {
 
 .modal_image {
   width: 100%;
-  /* max-height: 30vh; */
-  aspect-ratio: 4 / 2;
-  overflow: hidden;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   display: block;
   border-bottom-left-radius: 60% 5%;
   border-bottom-right-radius: 60% 5%;
-  background-size: cover;
-  background-position: center center;
+  /* background-size: cover; */
+  /* background-position: center center; */
 }
 .modal_content_info {
   padding-bottom: 5em;
   flex: 1;
   overflow-y: auto;
   background: #f7f7f7;
+}
+.modal_content_info > div:first-child {
+  width: 100%;
+  max-height: 100vw;
+  overflow: hidden;
 }
 .product_info {
   overflow: hidden;
