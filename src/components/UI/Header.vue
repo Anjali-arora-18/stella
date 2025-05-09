@@ -23,13 +23,13 @@
           </li>
         </ul>
         <ul class="menu" v-if="subCategories.length">
-          <li v-for="item in subCategories" :key="item.id">
+          <li v-for="item in subCategories.filter((a) => a.menuItems.length)" :key="item.id">
             <button
-              v-if="item.menuItems.length"
               @click="scrollToSubSection(item.id)"
               :class="{ active: selectedSubCategory && selectedSubCategory === item.id }"
               :style="getButtonStyle(selectedSubCategory === item.id)"
               class="sub-category"
+              :id="`sub-category-header-${item.id}`"
             >
               {{ toTitleCase(item.label) }}
             </button>
@@ -163,6 +163,20 @@ const scrollToSubSection = (id) => {
     window.scrollTo({ top: y, behavior: 'smooth' })
   }
 }
+
+const scrollSectionToLeftOrRight = (element) => {
+  const parent = element.parentElement.parentElement // getting header width
+  const elementLeft = element.offsetLeft
+  const elementWidth = element.offsetWidth
+  const containerWidth = parent.offsetWidth
+  const scrollLeft = parent.scrollLeft
+  if (elementLeft < scrollLeft || elementLeft + elementWidth > scrollLeft + containerWidth) {
+    parent.scrollTo({
+      left: elementLeft - containerWidth / 2 + elementWidth / 2,
+      behavior: 'smooth',
+    })
+  }
+}
 const handleScroll = () => {
   if (categoryHeader.value) {
     headerOffsetTop = categoryHeader.value.offsetHeight + 150
@@ -173,23 +187,17 @@ const handleScroll = () => {
   const mostVisibleSubCategoryId = getMostVisibleElementSubCategoriesId()
   if (mostVisibleSubCategoryId) {
     selectedSubCategory.value = mostVisibleSubCategoryId.split('-')[1]
+    const element = document.getElementById(`sub-category-header-${selectedSubCategory.value}`)
+    if (element) {
+      scrollSectionToLeftOrRight(element)
+    }
   }
 
   if (mostVisibleId) {
     selectedItem.value = mostVisibleId
     const element = document.getElementById(`category-${mostVisibleId}`)
     if (element) {
-      const parent = element.parentElement.parentElement // getting header width
-      const elementLeft = element.offsetLeft
-      const elementWidth = element.offsetWidth
-      const containerWidth = parent.offsetWidth
-      const scrollLeft = parent.scrollLeft
-      if (elementLeft < scrollLeft || elementLeft + elementWidth > scrollLeft + containerWidth) {
-        parent.scrollTo({
-          left: elementLeft - containerWidth / 2 + elementWidth / 2,
-          behavior: 'smooth',
-        })
-      }
+      scrollSectionToLeftOrRight(element)
     }
   }
 }
@@ -231,27 +239,24 @@ function getMostVisibleElementSubCategoriesId() {
   const elements = Array.from(document.querySelectorAll('[id]')).filter(
     (el) => el.id !== 'app' && el.id.startsWith('subCategories-'),
   )
-  let maxVisibleArea = 0
+  let minDistanceToCenter = Infinity
   let mostVisibleElement = null
+
+  const viewportCenter = window.innerHeight / 2
 
   elements.forEach((element) => {
     // Get element's rectangle
     const rect = element.getBoundingClientRect()
 
-    // Calculate visible area
-    const viewHeight = window.innerHeight
-    const viewWidth = window.innerWidth
+    // Calculate distance from element's center to viewport center
+    const elementCenter = rect.top + rect.height / 2
+    const distanceToCenter = Math.abs(elementCenter - viewportCenter)
 
-    // Calculate intersection with viewport
-    const visibleHeight = Math.min(rect.bottom, viewHeight) - Math.max(rect.top, 0)
-    const visibleWidth = Math.min(rect.right, viewWidth) - Math.max(rect.left, 0)
+    // Check if element is visible
+    const isVisible = rect.top < window.innerHeight && rect.bottom > 0
 
-    // Calculate visible area
-    const visibleArea = visibleHeight * visibleWidth
-
-    // Update if this element has larger visible area
-    if (visibleArea > maxVisibleArea) {
-      maxVisibleArea = visibleArea
+    if (isVisible && distanceToCenter < minDistanceToCenter) {
+      minDistanceToCenter = distanceToCenter
       mostVisibleElement = element
     }
   })

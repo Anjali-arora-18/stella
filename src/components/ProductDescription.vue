@@ -1,6 +1,12 @@
 <template>
-  <div class="modal_overlay" v-if="product">
-    <div class="modal_content">
+  <div
+    class="modal_overlay"
+    v-if="product"
+    @touchstart="handleTouchStart"
+    @touchmove="handleTouchMove"
+    @touchend="handleTouchEnd"
+  >
+    <div class="modal_content" :style="{ transform: `translateX(${currentX}px)` }">
       <div class="modal_content_info">
         <div class="header_closer">
           <a class="close_btn" href="#" @click.prevent="$emit('closeModal')">
@@ -26,78 +32,6 @@
           </div>
           <div class="product_description">{{ product.description }}</div>
         </div>
-        <!-- <div class="product_content_ui">
-          <div
-            class="screen_bottom_controls"
-            style="opacity: 1; display: block"
-            v-if="selectedVariation"
-          >
-            <div class="udapte_controls">
-              <div class="cart_add_remove_controls">
-                <a
-                  href="#"
-                  @click="count > 0 ? count-- : null"
-                  class="round_nav_fill primary minus inactive"
-                  ><span class="icon-minus"></span
-                ></a>
-                <div class="cart_add_info">{{ count }}</div>
-                <a href="#" @click="count++" class="round_nav_fill primary plus"
-                  ><span class="icon-plus"></span
-                ></a>
-              </div>
-            </div>
-            <button @click="addToCart" class="apt_button primary add_to_cart_btn inactive">
-              Add to cart
-            </button>
-          </div>
-          <div class="product_widget" v-for="(variation, index) in product.options" :key="index">
-            <div class="widget_info">
-              <div class="widget_title">{{ variation.title }}</div>
-              <div v-if="variation.isRequired" class="options_required_info">1 Required</div>
-              <div v-else class="options_required_info optional">Optional</div>
-            </div>
-            <div class="widget_entries" v-for="(type, vIndex) in variation.types" :key="vIndex">
-              <div
-                class="widget_radio_entry"
-                :class="{
-                  selected:
-                    selectedVariation[variation.id] !== undefined &&
-                    selectedVariation[variation.id].includes(type.id),
-                }"
-                @click="addToSelection(variation.multiple, variation.id, type.id)"
-              >
-                <div
-                  class="primary_color_border"
-                  :class="{
-                    square_symbol: variation.multiple,
-                    radio_symbol: !variation.multiple,
-                  }"
-                >
-                  <div
-                    class="primary_color_background"
-                    :class="{
-                      show:
-                        selectedVariation[variation.id] !== undefined &&
-                        selectedVariation[variation.id].includes(type.id),
-                      square_fill: variation.multiple,
-                      radio_fill: !variation.multiple,
-                    }"
-                  ></div>
-                </div>
-                <div class="variant_info">{{ type.name }}</div>
-                <div class="variant_price">
-                  <span class="currency_symbol">€</span
-                  ><span class="currency_val">{{ type.price }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="if_form_control">
-            <div class="label">Additional notes</div>
-            <textarea class="if_textarea_input additional_notes" spellcheck="false"></textarea>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
@@ -164,6 +98,29 @@ export default {
       emit('closeModal')
     }
 
+    const startX = ref(0)
+    const currentX = ref(0)
+    const isDragging = ref(false)
+
+    const handleTouchStart = (e) => {
+      startX.value = e.touches[0].clientX
+      isDragging.value = true
+    }
+
+    const handleTouchMove = (e) => {
+      if (!isDragging.value) return
+      currentX.value = e.touches[0].clientX - startX.value
+      if (currentX.value < 0) currentX.value = 0
+    }
+
+    const handleTouchEnd = () => {
+      if (currentX.value > 100) {
+        emit('closeModal')
+      }
+      currentX.value = 0
+      isDragging.value = false
+    }
+
     const imageBackgroundStyle = computed(() => {
       if (!Object.keys(props.product).length) return {}
 
@@ -186,6 +143,9 @@ export default {
       addToCart,
       count,
       imageBackgroundStyle,
+      handleTouchStart,
+      handleTouchMove,
+      handleTouchEnd,
     }
   },
 }
@@ -249,8 +209,9 @@ export default {
 
 .modal_image {
   width: 100%;
-  max-height: 30vh;
-  object-fit: cover;
+  /* max-height: 30vh; */
+  aspect-ratio: 4 / 2;
+  overflow: hidden;
   display: block;
   border-bottom-left-radius: 60% 5%;
   border-bottom-right-radius: 60% 5%;

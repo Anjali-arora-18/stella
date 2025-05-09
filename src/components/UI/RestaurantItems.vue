@@ -4,13 +4,17 @@
       <div class="content_items" v-for="category in categories" :key="category._id">
         <div :id="category._id">
           <h2 class="content_title">{{ category.name }}</h2>
-          <div v-for="subCategory in category.subCategories" :key="subCategory._id">
+          <div
+            class="sub_category_block"
+            v-for="subCategory in category.subCategories"
+            :key="subCategory._id"
+          >
             <div :id="`subCategories-${subCategory._id}`">
               <h3 v-if="subCategory.menuItems.length" class="content_sub_title">
                 {{ subCategory.name }}
               </h3>
               <div
-                class="content_item_product"
+                class="content_item_product subcategory_border"
                 v-for="item in subCategory.menuItems"
                 :key="item._id"
                 @click="openModal(item)"
@@ -20,7 +24,18 @@
                   :class="{ 'no-image': !item.imageUrl }"
                 >
                   <div class="item_info">
-                    <div class="item_title">{{ item.name }}</div>
+                    <div class="item_title">
+                      {{ item.name }}
+                    </div>
+                    <div class="allergen_icons" v-if="item.allergenIds && item.allergenIds.length">
+                      <img
+                        v-for="id in item.allergenIds"
+                        :key="id"
+                        :src="allergenIcons[id]"
+                        :alt="`Allergen ${id}`"
+                        class="allergen_icon"
+                      />
+                    </div>
                     <div class="item_description">{{ item.description }}</div>
                     <div class="item_price" v-if="parseFloat(item.price)">
                       <span class="currency_symbol">€ </span>
@@ -46,7 +61,18 @@
               :class="{ 'no-image': !item.imageUrl }"
             >
               <div class="item_info">
-                <div class="item_title">{{ item.name }}</div>
+                <div class="item_title">
+                  {{ item.name }}
+                </div>
+                <div class="allergen_icons" v-if="item.allergenIds && item.allergenIds.length">
+                  <img
+                    v-for="id in item.allergenIds"
+                    :key="id"
+                    :src="allergenIcons[id]"
+                    :alt="`Allergen ${id}`"
+                    class="allergen_icon"
+                  />
+                </div>
                 <div class="item_description">{{ item.description }}</div>
                 <div class="item_price" v-if="parseFloat(item.price)">
                   <span class="currency_symbol">€ </span>
@@ -130,7 +156,32 @@ export default {
     // const openCart = () => {
     //   showCart.value = true
     // }
-
+    const allergenIcons = {
+      1: '/allergens/vegan.png',
+      2: '/allergens/plant_based.png',
+      3: '/allergens/vegetarian.png',
+      4: '/allergens/pescatarian.png',
+      5: '/allergens/spicy.png',
+      6: '/allergens/halal.png',
+      7: '/allergens/kosher.png',
+      8: '/allergens/gluten_free.png',
+      9: '/allergens/dairy_free.png',
+      10: '/allergens/nut_free.png',
+      11: '/allergens/gluten.png',
+      12: '/allergens/crustaceans.png',
+      13: '/allergens/eggs.png',
+      14: '/allergens/fish.png',
+      15: '/allergens/peanuts.png',
+      16: '/allergens/soybeans.png',
+      17: '/allergens/milk.png',
+      18: '/allergens/nuts.png',
+      19: '/allergens/celery.png',
+      20: '/allergens/mustard.png',
+      21: '/allergens/sesame_seeds.png',
+      22: '/allergens/sulphur_dioxide.png',
+      23: '/allergens/lupin.png',
+      24: '/allergens/molluscs.png',
+    }
     return {
       selectedProduct,
       openModal,
@@ -145,6 +196,7 @@ export default {
       showCart,
       openCart,
       closeCart,
+      allergenIcons,
     }
   },
 }
@@ -162,20 +214,49 @@ export default {
   padding: 1em;
 }
 .content_title {
-  font-size: 1.3em;
-  margin: 0;
+  font-size: 1.4em;
+  margin: 1em 0 0.5em;
   font-weight: bold;
+  color: #333;
+  border-bottom: 1px solid #c9386f;
+  padding-bottom: 0.3em;
 }
 .content_sub_title {
   font-size: 1.2em;
-  margin: 0;
-  padding-top: 0.5em;
-  font-weight: bold;
+  margin: 0.5em 0 0.3em;
+  padding-left: 0.5em;
+  font-weight: 600;
+  color: #444;
+}
+.sub_category_block {
+  padding-right: 1em;
+  margin-bottom: 1em;
+}
+.subcategory_border {
+  border-left: 3px solid #c9386f;
+  background-color: #fff;
+  margin-left: 0.5em;
+  padding-left: 1em;
 }
 .content_item_product {
   border-bottom: 1px solid #efefef;
   cursor: pointer;
 }
+.sub_category_block .content_item_product:last-child {
+  border-bottom: none;
+}
+.content_items > div > .content_item_product:last-child {
+  border-bottom: none;
+}
+.allergen_icons {
+  margin: 0.2em 0;
+}
+.allergen_icon {
+  height: 20px;
+  width: 20px;
+  margin: 0 2px;
+}
+
 .product_list_item.no-image {
   flex-direction: column;
 }
@@ -207,12 +288,22 @@ export default {
   font-size: 1.1em;
   font-weight: 500;
   margin-bottom: 0.2em;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .item_info .item_description {
   font-weight: 300;
   font-size: 1em;
   margin-bottom: 1em;
   color: #6b6b6b;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .item_thumb {
   flex-shrink: 0;
