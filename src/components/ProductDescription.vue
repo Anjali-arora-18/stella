@@ -55,7 +55,7 @@ import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 
 export default {
-  setup(props, { emit }) {
+  setup() {
     const selectedVariation = ref([])
     const count = ref(1)
     const menuStore = useMenuStore()
@@ -71,9 +71,14 @@ export default {
     const cartStore = useCartStore()
     const url = import.meta.env.VITE_APP_API_URL
     const getMenuItems = async () => {
-      axios.get(`${url}menuItemvoById/${route.params.id}`, {}).then((response) => {
-        product.value = response.data
-      })
+      axios
+        .get(`${url}menuItemvoById/${route.params.id}`, {})
+        .then((response) => {
+          product.value = response.data
+        })
+        .catch((err) => {
+          router.push('/404')
+        })
     }
     const outlet = computed(() => menuStore.restDetails)
 
@@ -139,7 +144,7 @@ export default {
 
     const handleTouchEnd = () => {
       if (currentX.value > 100) {
-        router.push('/')
+        closeModal()
       }
       currentX.value = 0
       isDragging.value = false

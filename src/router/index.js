@@ -25,6 +25,11 @@ const router = createRouter({
       name: 'cart',
       component: () => import('../components/CartView.vue'),
     },
+    {
+      path: '/404',
+      name: '404',
+      component: () => import('../views/404.vue'),
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     // If this is a back/forward navigation, restore the saved scroll position

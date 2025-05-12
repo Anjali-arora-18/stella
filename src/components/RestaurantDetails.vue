@@ -299,13 +299,16 @@ export default {
 
       if (openingTimes.selected === 'daily') {
         const { opens, closes } = openingTimes.daily
+        if (!opens && !closes) {
+          return `Everyday`
+        }
         return `Everyday - ${opens} - ${closes}`
       }
 
       if (openingTimes.selected === 'is24h') {
         return 'Everyday - Open 24h'
       }
-      const grouped = []
+      let grouped = []
       let currentGroup = []
       let lastTime = null
       if (openingTimes.selected === 'byDay') {
@@ -333,6 +336,8 @@ export default {
       if (currentGroup.length) {
         grouped.push({ days: currentGroup, time: lastTime })
       }
+
+      grouped = grouped.filter((group) => group.time && group.time !== '-')
 
       return grouped
         .map(({ days, time }) => {

@@ -214,8 +214,8 @@ export default {
 }
 .content_sub_title {
   font-size: 1.2em;
-  margin: 0.5em 0 0.3em;
-  padding-left: 0.5em;
+  margin: 0.5em 0 0;
+  /* padding-left: 0.5em; */
   font-weight: 600;
   color: #444;
 }
@@ -224,10 +224,10 @@ export default {
   margin-bottom: 1em;
 }
 .subcategory_border {
-  border-left: 3px solid #c9386f;
-  background-color: #fff;
-  margin-left: 0.5em;
-  padding-left: 1em;
+  /* border-left: 3px solid #c9386f; */
+  /* background-color: #fff; */
+  /* margin-left: 0.5em; */
+  /* padding-left: 1em; */
 }
 .content_item_product {
   border-bottom: 1px solid #efefef;
@@ -269,7 +269,7 @@ export default {
 }
 .product_list_item {
   display: flex;
-  padding: 1em 0em;
+  padding: 0.5em 0;
   position: relative;
 }
 .product_list_item .product_underline {
