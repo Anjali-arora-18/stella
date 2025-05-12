@@ -17,48 +17,16 @@
 import Header from '@/components/UI/Header.vue'
 import RestaurantDetails from '@/components/RestaurantDetails.vue'
 import RestaurantItems from '@/components/UI/RestaurantItems.vue'
-import axios from 'axios'
+import { useMenuStore } from '@/stores/getMenu.js'
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-const categories = ref([])
 const restDetails = ref(null)
 const selectedCategory = ref('')
 const isLoading = ref(false)
 const route = useRoute()
-const url = import.meta.env.VITE_APP_API_URL
-const outletName = window.location.hostname.split('.')[0]
-const getMenuItems = async (item) => {
-  axios
-    .get(`${url}menuItemsvo`, {
-      params: {
-        outletName: outletName,
-        categoryId: item._id,
-      },
-    })
-    .then((response) => {
-      const categoryIndex = categories.value.findIndex((category) => category._id === item._id)
-      if (categoryIndex !== -1) {
-        const itemsWithSubCategories = response.data.filter((item) => item.subCategories.length)
-        const itemsWithoutSubCategories = response.data.filter((item) => !item.subCategories.length)
-        categories.value[categoryIndex] = {
-          ...categories.value[categoryIndex],
-          menuItems: itemsWithoutSubCategories,
-          subCategories: categories.value[categoryIndex].subCategories.map((e) => {
-            const subCategoryItems = itemsWithSubCategories.filter(
-              (item) => item.subCategories && item.subCategories.includes(e._id),
-            )
-            return {
-              ...e,
-              menuItems: subCategoryItems,
-            }
-          }),
-        }
-        if (!selectedCategory.value) {
-          selectedCategory.value = categories.value[categoryIndex]
-        }
-      }
-    })
-}
+const menuStore = useMenuStore()
+
+const categories = computed(() => menuStore.categories)
 
 const filteredCategories = computed(() => {
   return categories.value.filter(
@@ -71,35 +39,14 @@ const filteredCategories = computed(() => {
 
 onMounted(async () => {
   isLoading.value = true
-  const response = await axios.get(`${url}outletsvo`, {
-    params: {
-      outletName: outletName,
-    },
-  })
-  if (response.data.length) {
-    restDetails.value = response.data[0]
+  if (!categories.value.length) {
+    await menuStore.getOutletDetails()
+    await menuStore.getCategories()
   }
-  await axios
-    .get(`${url}menuCategoriesvo`, {
-      params: {
-        outletName: restDetails.value.name,
-      },
-    })
-    .then((res) => {
-      if (res.data.length) {
-        categories.value = res.data.map((e) => ({
-          ...e,
-          menuItems: [],
-          subCategories: e.subCategories.map((subCategory) => ({
-            ...subCategory,
-            menuItems: [],
-          })),
-        }))
-        res.data.forEach(async (category) => {
-          await getMenuItems(category)
-        })
-      }
-    })
+  // if (!selectedCategory.value) {
+  //             selectedCategory.value = this.categories[categoryIndex]
+  //           }
+
   isLoading.value = false
 })
 </script>

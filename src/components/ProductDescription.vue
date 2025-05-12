@@ -9,7 +9,7 @@
     <div class="modal_content" :style="{ transform: `translateX(${currentX}px)` }">
       <div class="modal_content_info">
         <div class="header_closer">
-          <a class="close_btn" href="#" @click.prevent="$emit('closeModal')">
+          <a class="close_btn" href="#" @click.prevent="$router.push('/')">
             <span>✕</span>
           </a>
         </div>
@@ -50,13 +50,12 @@
 <script>
 import { computed, ref } from 'vue'
 import { useCartStore } from '@/stores/cart'
+import { useRoute, useRouter } from 'vue-router'
+import axios from 'axios'
+
 export default {
   props: {
     outlet: {
-      type: Object,
-      required: true,
-    },
-    product: {
       type: Object,
       required: true,
     },
@@ -64,7 +63,17 @@ export default {
   setup(props, { emit }) {
     const selectedVariation = ref([])
     const count = ref(1)
+    const route = useRoute()
+    const router = useRouter()
+    const product = ref({})
     const cartStore = useCartStore()
+    const url = import.meta.env.VITE_APP_API_URL
+    const getMenuItems = async () => {
+      axios.get(`${url}menuItemvoById/${route.params.id}`, {}).then((response) => {
+        product.value = response.data
+      })
+    }
+    getMenuItems()
     const addToSelection = (isMultiple, optionId, typeId) => {
       if (isMultiple) {
         if (!selectedVariation.value[optionId]) {
@@ -106,7 +115,7 @@ export default {
         }
       })
       cartStore.addToCart(items)
-      emit('closeModal')
+      router.push('/')
     }
 
     const startX = ref(0)
@@ -126,7 +135,7 @@ export default {
 
     const handleTouchEnd = () => {
       if (currentX.value > 100) {
-        emit('closeModal')
+        router.push('/')
       }
       currentX.value = 0
       isDragging.value = false
@@ -174,6 +183,7 @@ export default {
       24: '/allergens/molluscs.png',
     }
     return {
+      product,
       selectedVariation,
       addToSelection,
       addToCart,

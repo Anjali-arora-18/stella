@@ -17,7 +17,7 @@
                 class="content_item_product subcategory_border"
                 v-for="item in subCategory.menuItems"
                 :key="item._id"
-                @click="openModal(item)"
+                @click="goToProduct(item._id)"
               >
                 <div
                   class="product_list_item product_underline"
@@ -55,7 +55,7 @@
             class="content_item_product"
             v-for="item in category.menuItems"
             :key="item._id"
-            @click="openModal(item)"
+            @click="goToProduct(item._id)"
           >
             <div
               class="product_list_item product_underline"
@@ -90,12 +90,6 @@
         </div>
       </div>
     </div>
-    <ProductDescription
-      v-if="selectedProduct"
-      :product="selectedProduct"
-      :outlet="outlet"
-      @closeModal="selectedProduct = null"
-    />
   </div>
 </template>
 
@@ -103,20 +97,27 @@
 import { ref, computed } from 'vue'
 import ProductDescription from '../ProductDescription.vue'
 import CartView from '../CartView.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 export default {
   props: ['selectedCategory', 'categories', 'outlet'],
   components: {
     ProductDescription,
   },
+  methods: {
+    goToProduct(id) {
+      this.$router.push({ name: 'ProductDescription', params: { id: id } })
+    },
+  },
   setup() {
     const selectedProduct = ref(null)
-    const openModal = (product) => {
-      selectedProduct.value = product
-    }
-    const closeModal = () => {
-      selectedProduct.value = null
-    }
+    // const openModal = (product) => {
+    //   selectedProduct.value = product
+    // }
+    // const closeModal = () => {
+    //   selectedProduct.value = null
+    // }
     const cart = ref([])
     const cartCount = computed(() => {
       return cart.value.reduce((total, item) => total + item.quantity, 0)
@@ -186,8 +187,6 @@ export default {
     }
     return {
       selectedProduct,
-      openModal,
-      closeModal,
       cart,
       cartCount,
       cartTotal,
