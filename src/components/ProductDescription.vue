@@ -50,19 +50,15 @@
 <script>
 import { computed, ref } from 'vue'
 import { useCartStore } from '@/stores/cart'
+import { useMenuStore } from '@/stores/getMenu'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 
 export default {
-  props: {
-    outlet: {
-      type: Object,
-      required: true,
-    },
-  },
   setup(props, { emit }) {
     const selectedVariation = ref([])
     const count = ref(1)
+    const menuStore = useMenuStore()
     const route = useRoute()
     const router = useRouter()
     const product = ref({})
@@ -73,6 +69,8 @@ export default {
         product.value = response.data
       })
     }
+    const outlet = computed(() => menuStore.restDetails)
+
     getMenuItems()
     const addToSelection = (isMultiple, optionId, typeId) => {
       if (isMultiple) {
@@ -92,14 +90,14 @@ export default {
 
     const addToCart = () => {
       const items = {
-        id: props.product.id,
+        id: product.value.id,
         count: count.value,
-        name: props.product.name,
-        imageUrl: props.product.imageUrl,
+        name: product.value.name,
+        imageUrl: product.value.imageUrl,
         options: [],
       }
 
-      props.product.options.forEach((option) => {
+      product.value.options.forEach((option) => {
         const options = option
         const selectedOption = selectedVariation.value[option.id]
         if (selectedOption) {
@@ -142,19 +140,19 @@ export default {
     }
 
     const imageBackgroundStyle = computed(() => {
-      if (!Object.keys(props.product).length) return {}
+      if (!Object.keys(product.value).length) return {}
 
-      const hasHeaderImage = props.product.imageUrl && props.product.imageUrl !== ''
+      const hasHeaderImage = product.value.imageUrl && product.value.imageUrl !== ''
       return hasHeaderImage
         ? {
-            background: `url(${props.product.imageUrl})`,
+            background: `url(${product.value.imageUrl})`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center center',
             borderBottomLeftRadius: '60% 5%',
             borderBottomRightRadius: '60% 5%',
           }
-        : { backgroundColor: props.outlet.headerColor, height: '20vh' }
+        : { backgroundColor: outlet.value.headerColor, height: '20vh' }
     })
     const allergenIcons = {
       1: '/allergens/vegan.png',
