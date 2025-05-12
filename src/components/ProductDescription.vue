@@ -8,18 +8,18 @@
   >
     <div class="modal_content" :style="{ transform: `translateX(${currentX}px)` }">
       <div class="modal_content_info">
-        <div class="header_closer">
-          <a class="close_btn" href="#" @click.prevent="closeModal">
-            <span>✕</span>
-          </a>
-        </div>
-        <div class="image_wrapper" v-if="product" :style="imageBackgroundStyle">
+        <div class="image_wrapper" :style="imageBackgroundStyle">
           <img
             class="modal_image"
             v-if="product.imageUrl"
             :src="product.imageUrl"
             :alt="product.name"
           />
+          <div class="header_closer">
+            <a class="close_btn" href="#" @click.prevent="closeModal">
+              <span>✕</span>
+            </a>
+          </div>
         </div>
         <div class="product_info">
           <div class="content">
@@ -56,18 +56,18 @@ import axios from 'axios'
 
 export default {
   setup(props, { emit }) {
-    const closeModal = () => {
-      if (window.history.length > 1) {
-        router.back()
-        return
-      }
-    }
     const selectedVariation = ref([])
     const count = ref(1)
     const menuStore = useMenuStore()
     const route = useRoute()
     const router = useRouter()
     const product = ref({})
+    const closeModal = () => {
+      if (window.history.length > 1) {
+        router.back()
+        return
+      }
+    }
     const cartStore = useCartStore()
     const url = import.meta.env.VITE_APP_API_URL
     const getMenuItems = async () => {
@@ -187,8 +187,8 @@ export default {
       24: '/allergens/molluscs.png',
     }
     return {
-      closeModal,
       product,
+      closeModal,
       selectedVariation,
       addToSelection,
       addToCart,
@@ -284,7 +284,7 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  /* display: block; */
 }
 .modal_content_info {
   padding-bottom: 5em;
