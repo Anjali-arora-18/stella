@@ -197,7 +197,7 @@ export default {
 </script>
 <style scoped>
 .modal_overlay {
-  position: fixed;
+  /* position: fixed;
   z-index: 1000;
   top: 0;
   left: 0;
@@ -206,19 +206,19 @@ export default {
   background: #f7f7f7;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: flex-end; */
   transition: opacity 0.5s ease-in-out;
   overflow: hidden;
 }
 
 .modal_content {
-  position: absolute;
+  /* position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; */
   background: white;
   transform: translateY(100%);
   animation: slideUp 0.5s ease-in-out forwards;
@@ -276,6 +276,8 @@ export default {
   padding-bottom: 5em;
   flex: 1;
   overflow-y: auto;
+  height: 100vh;
+  position: relative;
   background: #f7f7f7;
 }
 .modal_content_info > div:first-child {
