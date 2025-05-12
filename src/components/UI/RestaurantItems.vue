@@ -3,7 +3,9 @@
     <div>
       <div class="content_items" v-for="category in categories" :key="category._id">
         <div :id="category._id">
-          <h2 class="content_title">{{ category.name }}</h2>
+          <h2 class="content_title" :style="{ borderBottom: `1px solid ${outlet.primaryColor}` }">
+            {{ category.name }}
+          </h2>
           <div
             class="sub_category_block"
             v-for="subCategory in category.subCategories"
@@ -209,7 +211,6 @@ export default {
   margin: 1em 0 0.5em;
   font-weight: bold;
   color: #333;
-  border-bottom: 1px solid #c9386f;
   padding-bottom: 0.3em;
 }
 .content_sub_title {
