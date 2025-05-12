@@ -19,14 +19,11 @@ import RestaurantDetails from '@/components/RestaurantDetails.vue'
 import RestaurantItems from '@/components/UI/RestaurantItems.vue'
 import { useMenuStore } from '@/stores/getMenu.js'
 import { ref, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
-const restDetails = ref(null)
-const selectedCategory = ref('')
 const isLoading = ref(false)
-const route = useRoute()
 const menuStore = useMenuStore()
 
 const categories = computed(() => menuStore.categories)
+const restDetails = computed(() => menuStore.restDetails)
 
 const filteredCategories = computed(() => {
   return categories.value.filter(
