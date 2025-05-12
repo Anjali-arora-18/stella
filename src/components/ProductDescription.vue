@@ -9,11 +9,11 @@
     <div class="modal_content" :style="{ transform: `translateX(${currentX}px)` }">
       <div class="modal_content_info">
         <div class="header_closer">
-          <a class="close_btn" href="#" @click.prevent="$router.push('/')">
+          <a class="close_btn" href="#" @click.prevent="closeModal">
             <span>✕</span>
           </a>
         </div>
-        <div v-if="product" :style="imageBackgroundStyle">
+        <div class="image_wrapper" v-if="product" :style="imageBackgroundStyle">
           <img
             class="modal_image"
             v-if="product.imageUrl"
@@ -35,7 +35,7 @@
                 />
               </div>
             </div>
-            <div class="product_price_info">
+            <div class="product_price_info" v-if="product.price">
               from
               <span class="product_currency">€ </span>
               <span class="product_price">{{ parseFloat(product.price).toFixed(2) }}</span>
@@ -56,6 +56,12 @@ import axios from 'axios'
 
 export default {
   setup(props, { emit }) {
+    const closeModal = () => {
+      if (window.history.length > 1) {
+        router.back()
+        return
+      }
+    }
     const selectedVariation = ref([])
     const count = ref(1)
     const menuStore = useMenuStore()
@@ -181,6 +187,7 @@ export default {
       24: '/allergens/molluscs.png',
     }
     return {
+      closeModal,
       product,
       selectedVariation,
       addToSelection,
@@ -197,7 +204,7 @@ export default {
 </script>
 <style scoped>
 .modal_overlay {
-  /* position: fixed;
+  position: fixed;
   z-index: 1000;
   top: 0;
   left: 0;
@@ -206,19 +213,19 @@ export default {
   background: #f7f7f7;
   display: flex;
   justify-content: center;
-  align-items: flex-end; */
+  align-items: flex-end;
   transition: opacity 0.5s ease-in-out;
   overflow: hidden;
 }
 
 .modal_content {
-  /* position: absolute;
+  position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 100vh;
   display: flex;
-  flex-direction: column; */
+  flex-direction: column;
   background: white;
   transform: translateY(100%);
   animation: slideUp 0.5s ease-in-out forwards;
@@ -246,6 +253,7 @@ export default {
   position: absolute;
   left: 1em;
   top: 1em;
+  z-index: 10;
 }
 
 .close_btn {
@@ -260,17 +268,23 @@ export default {
   justify-content: center;
   font-size: 1em;
 }
-
-.modal_image {
+.image_wrapper {
+  position: relative;
   width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  display: block;
+  padding-top: 100%; /* 1:1 Aspect Ratio */
+  overflow: hidden;
   border-bottom-left-radius: 60% 5%;
   border-bottom-right-radius: 60% 5%;
-  /* background-size: cover; */
-  /* background-position: center center; */
+}
+
+.modal_image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .modal_content_info {
   padding-bottom: 5em;

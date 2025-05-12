@@ -112,12 +112,6 @@ export default {
   },
   setup() {
     const selectedProduct = ref(null)
-    // const openModal = (product) => {
-    //   selectedProduct.value = product
-    // }
-    // const closeModal = () => {
-    //   selectedProduct.value = null
-    // }
     const cart = ref([])
     const cartCount = computed(() => {
       return cart.value.reduce((total, item) => total + item.quantity, 0)
@@ -155,10 +149,6 @@ export default {
     const closeCart = () => {
       showCart.value = false
     }
-    // const showCart = ref(false)
-    // const openCart = () => {
-    //   showCart.value = true
-    // }
     const allergenIcons = {
       1: '/allergens/vegan.png',
       2: '/allergens/plant_based.png',

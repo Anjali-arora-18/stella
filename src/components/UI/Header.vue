@@ -325,23 +325,27 @@ nav {
 
 .header-section {
   width: 100%;
-  /* height: 30vh; */
   overflow: hidden;
   background-color: white;
 }
 .cover-header {
   width: 100%;
-  height: 100%;
-  max-height: 400px;
-  aspect-ratio: 4 / 2;
+  /* height: 100%; */
+  /* max-height: 400px; */
+  padding-top: 50%; /* 2:1 Aspect Ratio (i.e., 4:2) */
+  /* aspect-ratio: 4 / 2; */
   position: relative;
   overflow: hidden !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
+  background-position: center center !important;
   border-bottom-left-radius: 60% 5%;
   border-bottom-right-radius: 60% 5%;
 }
 .header-section .cover-header .header-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
   background: rgba(0, 0, 0, 0.4);
   width: 100%;
   height: 100%;
