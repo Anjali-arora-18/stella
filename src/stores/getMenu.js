@@ -5,7 +5,7 @@ export const useMenuStore = defineStore('menu', {
     return {
       categories: [],
       url: import.meta.env.VITE_APP_API_URL,
-      outletName: window.location.hostname.split('.')[0],
+      slug: window.location.hostname.split('.')[0],
       restDetails: null,
     }
   },
@@ -13,7 +13,7 @@ export const useMenuStore = defineStore('menu', {
     async getOutletDetails() {
       const response = await axios.get(`${this.url}outletsvo`, {
         params: {
-          outletName: this.outletName,
+          outletSlug: this.slug,
         },
       })
       this.restDetails = response.data[0]
