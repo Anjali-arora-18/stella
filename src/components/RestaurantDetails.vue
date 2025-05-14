@@ -64,7 +64,8 @@
                 v-for="line in formatOpeningHours(restDetails.openingTimes).split('\n')"
                 :key="line"
               >
-                {{ line }}
+                {{ line.split(' - ').slice(0, -2).join(' - ') }} -
+                <span style="font-weight: bold">{{ line.split(' - ').slice(-2).join(' - ') }}</span>
               </div>
             </div>
           </dt>
@@ -75,7 +76,7 @@
               height="18"
               viewBox="0 0 24 24"
               fill="none"
-              :stroke="restDetails.primaryColor"
+              :stroke="restDetails.primaryColor || '#000'"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -85,7 +86,7 @@
               ></path>
               <circle cx="12" cy="9" r="3"></circle>
             </svg>
-            {{ restDetails.address + ' , ' + restDetails.postcode }}
+            {{ address }}
           </dt>
           <dt class="icon-text">
             <svg
@@ -112,6 +113,7 @@
           </dt>
           <dt>
             <a
+              v-if="restDetails.email"
               :href="`mailto:${restDetails.email}`"
               class="link"
               target="_blank"
@@ -360,6 +362,11 @@ export default {
       formatOpeningHours,
     }
   },
+  computed: {
+    address() {
+      return [this.restDetails.address, this.restDetails.postcode].filter(Boolean).join(' , ')
+    },
+  },
 }
 </script>
 <style scoped>
@@ -436,7 +443,7 @@ dt {
   align-items: center;
   margin-bottom: 5px;
   font-weight: 500;
-  color: #8d8e90;
+  color: #000000cf;
 }
 
 dt svg {
