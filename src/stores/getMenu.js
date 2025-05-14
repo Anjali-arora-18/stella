@@ -6,6 +6,7 @@ export const useMenuStore = defineStore('menu', {
       categories: [],
       url: import.meta.env.VITE_APP_API_URL,
       slug: window.location.hostname.split('.')[0],
+      // slug: 'sagetest',
       restDetails: null,
     }
   },
@@ -61,7 +62,7 @@ export const useMenuStore = defineStore('menu', {
               menuItems: itemsWithoutSubCategories,
               subCategories: this.categories[categoryIndex].subCategories.map((e) => {
                 const subCategoryItems = itemsWithSubCategories.filter(
-                  (item) => item.subCategories && item.subCategories.includes(e._id),
+                  (item) => item.subCategories && item.subCategories.find((a) => a.id === e._id),
                 )
                 return {
                   ...e,
