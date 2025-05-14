@@ -8,85 +8,89 @@
           </h2>
           <div
             class="sub_category_block"
-            v-for="subCategory in category.subCategories"
+            v-for="subCategory in category.subCategories.filter((a) => a.menuItems.length)"
             :key="subCategory._id"
           >
             <div :id="`subCategories-${subCategory._id}`">
               <h3 v-if="subCategory.menuItems.length" class="content_sub_title">
                 {{ subCategory.name }}
               </h3>
-              <div
-                class="content_item_product subcategory_border"
-                v-for="item in subCategory.menuItems"
-                :key="item._id"
-                @click="goToProduct(item._id)"
-              >
+              <div class="content_item_product-block">
                 <div
-                  class="product_list_item product_underline"
-                  :class="{ 'no-image': !item.imageUrl }"
+                  class="content_item_product subcategory_border"
+                  v-for="item in subCategory.menuItems"
+                  :key="item._id"
+                  @click="goToProduct(item._id)"
                 >
-                  <div class="item_info">
-                    <div class="item_title">
-                      {{ item.name }}
+                  <div
+                    class="product_list_item product_underline"
+                    :class="{ 'no-image': !item.imageUrl }"
+                  >
+                    <div class="item_info">
+                      <div class="item_title">
+                        {{ item.name }}
+                      </div>
+                      <template v-if="item.allergenIds && item.allergenIds.length">
+                        <img
+                          v-for="(id, index) in item.allergenIds.slice(0, 5)"
+                          :key="id"
+                          :src="allergenIcons[id]"
+                          :alt="`Allergen ${id}`"
+                          class="allergen_icon"
+                        />
+                        <span v-if="item.allergenIds.length > 5" class="allergen_more">...</span>
+                      </template>
+                      <div class="item_description">{{ item.description }}</div>
+                      <div class="item_price" v-if="parseFloat(item.price)">
+                        <span class="currency_symbol">€ </span>
+                        <span class="currency_val">{{ parseFloat(item.price).toFixed(2) }}</span>
+                      </div>
                     </div>
-                    <template v-if="item.allergenIds && item.allergenIds.length">
-                      <img
-                        v-for="(id, index) in item.allergenIds.slice(0, 5)"
-                        :key="id"
-                        :src="allergenIcons[id]"
-                        :alt="`Allergen ${id}`"
-                        class="allergen_icon"
-                      />
-                      <span v-if="item.allergenIds.length > 5" class="allergen_more">...</span>
-                    </template>
-                    <div class="item_description">{{ item.description }}</div>
-                    <div class="item_price" v-if="parseFloat(item.price)">
-                      <span class="currency_symbol">€ </span>
-                      <span class="currency_val">{{ parseFloat(item.price).toFixed(2) }}</span>
+                    <div class="item_thumb">
+                      <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" />
                     </div>
+                    <div class="product_list_item_info red"></div>
                   </div>
-                  <div class="item_thumb">
-                    <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" />
-                  </div>
-                  <div class="product_list_item_info red"></div>
                 </div>
               </div>
             </div>
           </div>
-          <div
-            class="content_item_product"
-            v-for="item in category.menuItems"
-            :key="item._id"
-            @click="goToProduct(item._id)"
-          >
+          <div class="content_item_product-block">
             <div
-              class="product_list_item product_underline"
-              :class="{ 'no-image': !item.imageUrl }"
+              class="content_item_product"
+              v-for="item in category.menuItems"
+              :key="item._id"
+              @click="goToProduct(item._id)"
             >
-              <div class="item_info">
-                <div class="item_title">
-                  {{ item.name }}
+              <div
+                class="product_list_item product_underline"
+                :class="{ 'no-image': !item.imageUrl }"
+              >
+                <div class="item_info">
+                  <div class="item_title">
+                    {{ item.name }}
+                  </div>
+                  <template v-if="item.allergenIds && item.allergenIds.length">
+                    <img
+                      v-for="(id, index) in item.allergenIds.slice(0, 5)"
+                      :key="id"
+                      :src="allergenIcons[id]"
+                      :alt="`Allergen ${id}`"
+                      class="allergen_icon"
+                    />
+                    <span v-if="item.allergenIds.length > 5" class="allergen_more">...</span>
+                  </template>
+                  <div class="item_description">{{ item.description }}</div>
+                  <div class="item_price" v-if="parseFloat(item.price)">
+                    <span class="currency_symbol">€ </span>
+                    <span class="currency_val">{{ parseFloat(item.price).toFixed(2) }}</span>
+                  </div>
                 </div>
-                <template v-if="item.allergenIds && item.allergenIds.length">
-                  <img
-                    v-for="(id, index) in item.allergenIds.slice(0, 5)"
-                    :key="id"
-                    :src="allergenIcons[id]"
-                    :alt="`Allergen ${id}`"
-                    class="allergen_icon"
-                  />
-                  <span v-if="item.allergenIds.length > 5" class="allergen_more">...</span>
-                </template>
-                <div class="item_description">{{ item.description }}</div>
-                <div class="item_price" v-if="parseFloat(item.price)">
-                  <span class="currency_symbol">€ </span>
-                  <span class="currency_val">{{ parseFloat(item.price).toFixed(2) }}</span>
+                <div class="item_thumb">
+                  <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" />
                 </div>
+                <div class="product_list_item_info red"></div>
               </div>
-              <div class="item_thumb">
-                <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.name" />
-              </div>
-              <div class="product_list_item_info red"></div>
             </div>
           </div>
         </div>
@@ -208,7 +212,7 @@ export default {
 }
 .content_title {
   font-size: 1.4em;
-  margin: 1em 0 0.5em;
+  margin: 0.5em 0;
   font-weight: bold;
   color: #333;
   padding-bottom: 0.3em;
@@ -216,19 +220,12 @@ export default {
 .content_sub_title {
   font-size: 1.2em;
   margin: 0.5em 0 0;
-  /* padding-left: 0.5em; */
   font-weight: 600;
   color: #444;
 }
 .sub_category_block {
   padding-right: 1em;
   margin-bottom: 1em;
-}
-.subcategory_border {
-  /* border-left: 3px solid #c9386f; */
-  /* background-color: #fff; */
-  /* margin-left: 0.5em; */
-  /* padding-left: 1em; */
 }
 .content_item_product {
   border-bottom: 1px solid #efefef;
@@ -327,7 +324,6 @@ export default {
   overflow: hidden;
   border-radius: 2em;
 }
-/* Modal Overlay */
 .modal_overlay {
   position: fixed;
   z-index: 1000;
@@ -677,5 +673,24 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+@media (min-width: 1024px) {
+  .content_title {
+    text-align: center;
+    font-size: 2em;
+  }
+  .content_sub_title {
+    font-size: 1.5em;
+    text-align: left;
+  }
+  .item_thumb {
+    width: 130px;
+    height: 120px;
+  }
+  .content_item_product-block {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5%;
+  }
 }
 </style>

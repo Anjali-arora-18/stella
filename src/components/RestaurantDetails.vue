@@ -4,38 +4,40 @@
       <div @click="toggle" class="res-details-card-header">
         <div class="header-content">
           <p>Table <sub>1</sub></p>
-          <h1>{{ restDetails.name }}</h1>
+          <div class="name-toggle-wrapper">
+            <h1>{{ restDetails.name }}</h1>
+            <span class="toggle-icon">
+              <svg
+                v-if="!isOpen"
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="black"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+              <svg
+                v-else
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="black"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+            </span>
+          </div>
         </div>
-        <span class="toggle-icon">
-          <svg
-            v-if="!isOpen"
-            xmlns="http://www.w3.org/2000/svg"
-            width="26"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="black"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            width="26"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="black"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="18 15 12 9 6 15"></polyline>
-          </svg>
-        </span>
       </div>
       <div
         v-show="isOpen"
@@ -72,8 +74,8 @@
           <dt class="icon-text">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               :stroke="restDetails.primaryColor || '#000'"
@@ -383,9 +385,9 @@ export default {
   padding: 1em 1em;
   cursor: pointer;
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
+  /* flex-direction: row; */
+  align-items: center;
+  justify-content: center;
 }
 
 .header-content {
@@ -393,8 +395,18 @@ export default {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  /* justify-content: center; */
+  /* width: 100%; */
+}
+.name-toggle-wrapper {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  width: 100%;
+  gap: 8px;
+}
+
+.name-toggle-wrapper h1 {
+  margin: 0;
 }
 
 .res-details-card-header p:first-of-type {
@@ -447,7 +459,7 @@ dt {
 }
 
 dt svg {
-  margin-right: 14px;
+  margin-right: 8px;
 }
 dt .link {
   cursor: pointer;
@@ -455,5 +467,10 @@ dt .link {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+@media (min-width: 1024px) {
+  .res-details-card-header h1 {
+    font-size: 2em;
+  }
 }
 </style>

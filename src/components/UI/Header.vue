@@ -152,7 +152,7 @@ const scrollToSection = (item) => {
   }
 }
 const scrollToSubSection = (id) => {
-  selectedItem.value = id
+  selectedSubCategory.value = id
   const section = document.getElementById(`subCategories-${id}`)
   if (section) {
     let offset = (categoryHeader.value?.offsetHeight || 0) + 10
@@ -275,7 +275,10 @@ onBeforeUnmount(() => {
 <style scoped>
 nav {
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+}
+.category-header nav {
+  overflow-x: auto;
 }
 .page-container {
   width: 100%;
@@ -319,7 +322,7 @@ nav {
   height: 100px;
   object-fit: cover;
   border-radius: 50%;
-  border: 3px solid white;
+  border: 2px solid white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -427,6 +430,53 @@ nav {
   .menu li button {
     font-size: 14px;
     white-space: nowrap;
+  }
+}
+@media (min-width: 1024px) {
+  .cover-header {
+    background: none !important;
+    padding-top: 30%;
+  }
+
+  .header-overlay {
+    display: none !important;
+  }
+
+  .restaurant-logo {
+    width: 140px;
+    height: 140px;
+  }
+  .menu {
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+
+  .menu::-webkit-scrollbar {
+    display: none;
+  }
+  .menu li {
+    flex-shrink: 0;
+  }
+  .menu li button {
+    font-size: 18px;
+    padding: 10px 16px;
+  }
+  .menu li .sub-category {
+    font-size: 17px;
+    padding: 10px 16px;
+  }
+  .category-header {
+    box-shadow: none !important;
+  }
+  nav {
+    max-width: 1280px;
+    margin: auto;
+  }
+  .sticky-category {
+    nav {
+      padding: 0 3rem;
+    }
   }
 }
 </style>

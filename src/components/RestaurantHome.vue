@@ -1,16 +1,18 @@
 <template>
-  <div>
-    <Header :restDetails="restDetails" :categories="filteredCategories" />
-    <main class="screen_content">
-      <RestaurantDetails :restDetails="restDetails" />
-      <RestaurantItems
-        style="padding-top: 20px"
-        :outlet="restDetails"
-        v-if="!isLoading"
-        :selectedCategory="selectedCategory"
-        :categories="filteredCategories"
-      />
-    </main>
+  <div class="page_wrapper">
+    <div>
+      <Header :restDetails="restDetails" :categories="filteredCategories" />
+      <main class="screen_content">
+        <RestaurantDetails :restDetails="restDetails" />
+        <RestaurantItems
+          style="padding-top: 20px"
+          :outlet="restDetails"
+          v-if="!isLoading"
+          :selectedCategory="selectedCategory"
+          :categories="filteredCategories"
+        />
+      </main>
+    </div>
   </div>
 </template>
 <script setup>
@@ -40,10 +42,23 @@ onMounted(async () => {
     await menuStore.getOutletDetails()
     await menuStore.getCategories()
   }
-  // if (!selectedCategory.value) {
-  //             selectedCategory.value = this.categories[categoryIndex]
-  //           }
-
   isLoading.value = false
 })
 </script>
+
+<style scoped>
+.page-wrapper {
+  width: 100%;
+  margin: 0 auto;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media (min-width: 1024px) {
+  .page_wrapper {
+    max-width: 1280px;
+    padding: 0 3rem;
+    margin: auto;
+  }
+}
+</style>
