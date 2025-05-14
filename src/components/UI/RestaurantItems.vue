@@ -690,7 +690,7 @@ export default {
   .content_item_product-block {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 5%;
+    gap: 20px;
   }
 }
 </style>

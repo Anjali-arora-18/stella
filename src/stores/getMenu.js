@@ -6,7 +6,7 @@ export const useMenuStore = defineStore('menu', {
       categories: [],
       url: import.meta.env.VITE_APP_API_URL,
       slug: window.location.hostname.split('.')[0],
-      // slug: 'sagetest',
+      // slug: 'seanatra',
       restDetails: null,
     }
   },
