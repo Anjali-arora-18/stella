@@ -64,7 +64,7 @@
                 v-for="line in formatOpeningHours(restDetails.openingTimes).split('\n')"
                 :key="line"
               >
-                {{ line.split(' - ').slice(0, -2).join(' - ') }} -
+                {{ line.split(' - ').slice(0, -2).join(' - ') }}
                 <span style="font-weight: bold">{{ line.split(' - ').slice(-2).join(' - ') }}</span>
               </div>
             </div>
