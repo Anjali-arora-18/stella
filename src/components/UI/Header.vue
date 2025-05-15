@@ -358,7 +358,7 @@ nav {
   display: flex;
   gap: 14px;
   margin: 0;
-  padding: 6px;
+  padding: 4px;
   scrollbar-width: none;
 }
 
@@ -431,6 +431,9 @@ nav {
     font-size: 14px;
     white-space: nowrap;
   }
+  .menu li .sub-category {
+    font-size: 12px;
+  }
 }
 @media (min-width: 1024px) {
   .cover-header {
@@ -459,12 +462,12 @@ nav {
     flex-shrink: 0;
   }
   .menu li button {
-    font-size: 18px;
-    padding: 10px 16px;
+    font-size: 17px;
+    padding: 6px 12px;
   }
   .menu li .sub-category {
-    font-size: 17px;
-    padding: 10px 16px;
+    font-size: 15px;
+    padding: 6px 12px;
   }
   .category-header {
     box-shadow: none !important;

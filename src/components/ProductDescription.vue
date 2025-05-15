@@ -8,40 +8,51 @@
   >
     <div class="modal_content" :style="{ transform: `translateX(${currentX}px)` }">
       <div class="modal_content_info">
-        <div class="image_wrapper" :style="imageBackgroundStyle">
-          <img
-            class="modal_image"
-            v-if="product.imageUrl"
-            :src="product.imageUrl"
-            :alt="product.name"
-          />
+        <div class="modal_desktop_wrapper">
+          <div class="image_wrapper" :style="imageBackgroundStyle">
+            <img
+              class="modal_image"
+              v-if="product.imageUrl"
+              :src="product.imageUrl"
+              :alt="product.name"
+            />
+          </div>
           <div class="header_closer">
             <a class="close_btn" href="#" @click.prevent="closeModal">
               <span>✕</span>
             </a>
           </div>
-        </div>
-        <div class="product_info">
-          <div class="content">
-            <div class="product_name_and_icons">
-              <div class="product_name">{{ product.name }}</div>
-              <div class="allergen_icons" v-if="product.allergenIds && product.allergenIds.length">
-                <img
-                  v-for="id in product.allergenIds"
-                  :key="id"
-                  :src="allergenIcons[id]"
-                  :alt="`Allergen ${id}`"
-                  class="allergen_icon"
-                />
+
+          <div class="product_info">
+            <div class="content">
+              <div class="product_name_and_icons">
+                <div class="product_name">{{ product.name }}</div>
+                <div
+                  class="allergen_icons"
+                  v-if="product.allergenIds && product.allergenIds.length"
+                >
+                  <img
+                    v-for="id in product.allergenIds"
+                    :key="id"
+                    :src="allergenIcons[id]"
+                    :alt="`Allergen ${id}`"
+                    class="allergen_icon"
+                  />
+                </div>
+              </div>
+              <!-- Price on top for mobile -->
+              <div class="product_price_info price-mobile" v-if="product.price">
+                <span class="product_currency">€ </span>
+                <span class="product_price">{{ parseFloat(product.price).toFixed(2) }}</span>
               </div>
             </div>
-            <div class="product_price_info" v-if="product.price">
-              from
+            <div class="product_description">{{ product.description }}</div>
+            <!-- Price below description for desktop -->
+            <div class="product_price_info price-desktop" v-if="product.price">
               <span class="product_currency">€ </span>
               <span class="product_price">{{ parseFloat(product.price).toFixed(2) }}</span>
             </div>
           </div>
-          <div class="product_description">{{ product.description }}</div>
         </div>
       </div>
     </div>
@@ -215,7 +226,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%; */
-  background: #f7f7f7;
+  /* background: #f7f7f7; */
   /* display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -259,13 +270,13 @@ export default {
   position: absolute;
   left: 1em;
   top: 1em;
-  z-index: 10;
+  z-index: 20;
 }
 
 .close_btn {
   text-decoration: none;
   color: #c9386f;
-  background: #feffff;
+  background: #ffffffb8;
   width: 2em;
   height: 2em;
   border-radius: 1em;
@@ -273,12 +284,15 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 1em;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.close_btn span {
+  font-weight: bold;
 }
 .image_wrapper {
   position: relative;
   width: 100%;
-  /* padding-top: 100%; */
-
+  height: auto;
   overflow: hidden;
   border-bottom-left-radius: 60% 5%;
   border-bottom-right-radius: 60% 5%;
@@ -291,22 +305,24 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover; */
-  /* display: block; */
+  display: block;
   width: 100%;
-  aspect-ratio: 1;
+  height: auto;
+  object-fit: cover;
+  /* aspect-ratio: 1; */
 }
 .modal_content_info {
-  padding-bottom: 5em;
-  flex: 1;
-  overflow-y: auto;
-  height: 100%;
-  position: relative;
+  /* padding-bottom: 5em; */
+  /* flex: 1; */
+  /* overflow-y: auto; */
+  /* height: 100%; */
+  /* position: relative; */
   background: #f7f7f7;
 }
 .modal_content_info > div:first-child {
-  width: 100%;
-  max-height: 100vw;
-  overflow: hidden;
+  /* width: 100%; */
+  /* max-height: 100vw; */
+  /* overflow: hidden; */
 }
 .product_info {
   overflow: hidden;
@@ -333,6 +349,12 @@ export default {
   font-weight: bold;
   font-size: 1.2em;
   margin-right: 0.7em;
+}
+.price-desktop {
+  display: none;
+}
+.price-mobile {
+  display: block;
 }
 .product_price_info {
   flex-shrink: 0;
@@ -555,5 +577,54 @@ export default {
 }
 .screen_bottom_controls .add_to_cart_btn {
   flex: 1;
+}
+@media (min-width: 1024px) {
+  .modal_content {
+    padding-top: 3.5rem;
+  }
+  .modal_content_info {
+    max-width: 1280px;
+    padding: 0 3rem;
+    margin: auto;
+    background: none;
+  }
+  .modal_desktop_wrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
+  .image_wrapper {
+    width: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 0px !important;
+  }
+  .product_info {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  .header_closer {
+    left: 3em;
+    right: auto;
+  }
+  .product_name {
+    font-size: 2em;
+  }
+  .product_price_info {
+    font-size: 1.6em;
+  }
+  .allergen_icon {
+    height: 30px;
+    width: 30px;
+  }
+  .price-desktop {
+    display: block;
+    margin-top: auto;
+    text-align: left;
+  }
+  .price-mobile {
+    display: none;
+  }
 }
 </style>
