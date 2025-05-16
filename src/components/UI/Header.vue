@@ -383,9 +383,6 @@ nav {
 }
 
 @media (max-width: 768px) {
-  .header-section {
-    /* height: 180px; */
-  }
   .cover-header {
     background-size: cover !important;
   }
@@ -450,20 +447,36 @@ nav {
     height: 140px;
   }
   .menu {
+    display: flex;
+    flex-wrap: nowrap;
     overflow-x: auto;
     white-space: nowrap;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    gap: 10px;
+    scrollbar-color: #ccc transparent;
+    padding-bottom: 4px;
   }
 
   .menu::-webkit-scrollbar {
-    display: none;
+    height: 4px;
   }
+
+  .menu::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .menu::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 4px;
+  }
+
   .menu li {
     flex-shrink: 0;
   }
   .menu li button {
     font-size: 17px;
     padding: 6px 12px;
+    white-space: nowrap;
   }
   .menu li .sub-category {
     font-size: 15px;
@@ -471,10 +484,12 @@ nav {
   }
   .category-header {
     box-shadow: none !important;
+    overflow-x: auto;
   }
   nav {
     max-width: 1280px;
     margin: auto;
+    overflow-x: auto;
   }
   .sticky-category {
     nav {
