@@ -453,8 +453,9 @@ nav {
     white-space: nowrap;
     scrollbar-width: thin;
     gap: 10px;
-    scrollbar-color: #ccc transparent;
-    padding-bottom: 4px;
+    scrollbar-color: #aaaaaa4d transparent;
+    scroll-behavior: smooth;
+    padding-bottom: 12px;
   }
 
   .menu::-webkit-scrollbar {
@@ -495,6 +496,34 @@ nav {
     nav {
       padding: 0 3rem;
     }
+  }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .category-header {
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: thin;
+  }
+  .menu {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #aaaaaa4d transparent;
+    scroll-behavior: smooth;
+    padding-bottom: 12px;
+  }
+  .menu::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .menu::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .menu::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 4px;
   }
 }
 </style>
