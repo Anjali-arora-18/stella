@@ -21,7 +21,7 @@ export const useMenuStore = defineStore('menu', {
     },
     async getCategories() {
       await axios
-        .get(`${this.url}menuCategoriesvo`, {
+        .get(`${this.url}menuCategoriesvo?limit=50`, {
           params: {
             outletName: this.restDetails.name,
           },
