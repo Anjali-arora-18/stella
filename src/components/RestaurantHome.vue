@@ -1,9 +1,9 @@
 <template>
   <div class="page_wrapper">
-    <div>
-      <Header :restDetails="restDetails" :categories="filteredCategories" />
+    <div >
+      <Header v-if="restDetails" :restDetails="restDetails" :categories="filteredCategories" />
       <main class="screen_content">
-        <RestaurantDetails :restDetails="restDetails" />
+        <RestaurantDetails v-if="showRestaurantDetails" :restDetails="restDetails" />
         <RestaurantItems
           style="padding-top: 20px"
           :outlet="restDetails"
@@ -26,6 +26,10 @@ const menuStore = useMenuStore()
 
 const categories = computed(() => menuStore.categories)
 const restDetails = computed(() => menuStore.restDetails)
+
+const showRestaurantDetails = computed(() => {
+  return restDetails.value && !restDetails.value.hideDetails
+})
 
 const filteredCategories = computed(() => {
   return categories.value.filter(

@@ -1,9 +1,9 @@
 <template>
   <div ref="pageContainer" class="page-container">
-    <div class="header-section">
+    <div class="header-section" :class="{ hidden: isHeaderHidden }">
       <div v-if="restDetails" class="cover-header" :style="headerBackgroundStyle">
         <div class="header-overlay"></div>
-        <div class="logo-container">
+        <div class="logo-container" v-if="showLogo">
           <img :src="restDetails.logoUrl" alt="Restaurant Logo" class="restaurant-logo" />
         </div>
       </div>
@@ -54,6 +54,14 @@ let headerOffsetTop = 150
 const props = defineProps({
   categories: Array,
   restDetails: Object,
+})
+
+const showLogo = computed(() => {
+  return props.restDetails && !props.restDetails.hideLogo
+})
+
+const isHeaderHidden = computed(() => {
+  return props.restDetails ? props.restDetails.hideHeader : false
 })
 
 const headerBackgroundStyle = computed(() => {
@@ -263,6 +271,39 @@ function getMostVisibleElementSubCategoriesId() {
 
   return mostVisibleElement ? mostVisibleElement.id : null
 }
+  function getFType() {
+    const fontUrlSplit = props.restDetails.fontUrl.split('.')
+ const fType =  props.restDetails.fontUrl
+    ? fontUrlSplit[fontUrlSplit.length - 1]
+    : ''
+    console.log(fType, 'HERE')
+    if (fType === 'otf') {
+      return 'OpenType'
+    } else if (fType === 'ttf') {
+      return 'TrueType'
+    } else {
+      return 'Web Open Font Format'
+    }
+  
+}
+
+watch(() => props.restDetails, () => {
+  if (props.restDetails) {
+    const styleSheet = document.createElement('style')
+    styleSheet.textContent = `
+      @font-face {
+        font-family: ${props.restDetails.fontFamily};
+        src: url("${props.restDetails.fontUrl}") format("${getFType()}");
+      }
+      * {
+        font-family: ${props.restDetails.fontFamily};
+      }
+    `
+    document.head.appendChild(styleSheet)
+  }
+  
+}, { immediate: true })
+
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true })
@@ -273,6 +314,9 @@ onBeforeUnmount(() => {
 })
 </script>
 <style scoped>
+.hidden {
+  display: none !important;
+}
 nav {
   width: 100%;
   overflow-x: auto;
