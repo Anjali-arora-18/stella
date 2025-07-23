@@ -22,9 +22,15 @@
               <span>✕</span>
             </a>
           </div>
-
-          <div class="product_info">
-            <div class="content">
+          <div
+            v-if="restDetails"
+            class="product_info"
+            :style="{
+              backgroundColor: restDetails.backgroundColor || '#fbfbfb',
+              color: restDetails.textColor || '#000',
+            }"
+          >
+            <div class="content" :style="{ color: restDetails.textColor || '#000' }">
               <div class="product_name_and_icons">
                 <div class="product_name">{{ product.name }}</div>
                 <div
@@ -46,7 +52,9 @@
                 <span class="product_price">{{ parseFloat(product.price).toFixed(2) }}</span>
               </div>
             </div>
-            <div class="product_description">{{ product.description }}</div>
+            <div class="product_description" :style="{ color: restDetails.textColor || '#000' }">
+              {{ product.description }}
+            </div>
             <!-- Price below description for desktop -->
             <div class="product_price_info price-desktop" v-if="product.price">
               <span class="product_currency">€ </span>
@@ -58,18 +66,21 @@
     </div>
   </div>
 </template>
+
 <script>
 import { computed, ref } from 'vue'
 import { useCartStore } from '@/stores/cart'
 import { useMenuStore } from '@/stores/getMenu'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
+import { storeToRefs } from 'pinia'
 
 export default {
   setup() {
     const selectedVariation = ref([])
     const count = ref(1)
     const menuStore = useMenuStore()
+    const { restDetails } = storeToRefs(menuStore)
     const route = useRoute()
     const router = useRouter()
     const product = ref({})
@@ -91,7 +102,6 @@ export default {
           router.push('/404')
         })
     }
-    const outlet = computed(() => menuStore.restDetails)
 
     getMenuItems()
     const addToSelection = (isMultiple, optionId, typeId) => {
@@ -174,7 +184,7 @@ export default {
             borderBottomLeftRadius: '60% 5%',
             borderBottomRightRadius: '60% 5%',
           }
-        : { backgroundColor: outlet.value.headerColor, height: '20vh' }
+        : { backgroundColor: restDetails.value.headerColor, height: '40vh' }
     })
     const allergenIcons = {
       1: '/allergens/vegan.png',
@@ -216,8 +226,15 @@ export default {
       allergenIcons,
     }
   },
+  computed: {
+    restDetails() {
+      const menuStore = useMenuStore()
+      return menuStore.restDetails
+    },
+  },
 }
 </script>
+
 <style scoped>
 .modal_overlay {
   /* position: fixed;
@@ -256,16 +273,19 @@ export default {
     transform: translateY(0);
   }
 }
+
 .allergen_icons {
   margin: 0.2em 0;
   display: flex;
   flex-wrap: wrap;
 }
+
 .allergen_icon {
   height: 20px;
   width: 20px;
   margin-right: 4px;
 }
+
 .header_closer {
   position: absolute;
   left: 1em;
@@ -286,9 +306,11 @@ export default {
   font-size: 1em;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
+
 .close_btn span {
   font-weight: bold;
 }
+
 .image_wrapper {
   position: relative;
   width: 100%;
@@ -311,6 +333,7 @@ export default {
   object-fit: cover;
   /* aspect-ratio: 1; */
 }
+
 .modal_content_info {
   /* padding-bottom: 5em; */
   /* flex: 1; */
@@ -319,72 +342,87 @@ export default {
   /* position: relative; */
   background: #f7f7f7;
 }
+
 .modal_content_info > div:first-child {
   /* width: 100%; */
   /* max-height: 100vw; */
   /* overflow: hidden; */
 }
+
 .product_info {
   overflow: hidden;
   border-bottom: solid 1px #f2f2f2;
-  background: #fbfbfb;
+  /* background: #fbfbfb; */
   padding: 1em;
   font-weight: bold;
   box-sizing: border-box;
 }
+
 .content {
   display: flex;
   margin-bottom: 0.7em;
   justify-content: space-between;
   align-items: flex-start;
 }
+
 .product_name_and_icons {
   display: flex;
   flex-direction: column;
   flex: 1;
   margin-right: 0.7em;
 }
+
 .product_name {
   flex: 1;
   font-weight: bold;
   font-size: 1.2em;
   margin-right: 0.7em;
 }
+
 .price-desktop {
   display: none;
 }
+
 .price-mobile {
   display: block;
 }
+
 .product_price_info {
   flex-shrink: 0;
   font-weight: bold;
   text-align: right;
 }
+
 .product_price_info span {
   font-weight: bold;
 }
+
 .product_description {
   font-size: 1em;
   font-weight: 300;
   color: #6b6b6b;
 }
+
 .product_content_ui {
   padding-bottom: 2rem;
 }
+
 .product_widget {
   background: #fbfbfb;
   padding: 1em;
 }
+
 .product_widget .widget_info {
   margin-bottom: 15px;
   display: flex;
   align-items: center;
 }
+
 .product_widget .widget_info .widget_title {
   flex-grow: 1;
   font-weight: bold;
 }
+
 .product_widget .widget_info .options_required_info {
   flex-shrink: 0;
   font-size: 0.8em;
@@ -397,17 +435,21 @@ export default {
   color: #3d69e8;
   font-weight: 500;
 }
+
 .product_widget .widget_radio_entry {
   display: flex;
   padding: 0.8em 0em;
   cursor: pointer;
 }
+
 .primary_color_border {
   border-color: #c9386f;
 }
+
 .primary_color_background {
   background: #c9386f;
 }
+
 .product_widget .widget_radio_entry .radio_symbol,
 .square_symbol {
   display: flex;
@@ -421,9 +463,11 @@ export default {
   margin-right: 0.7em;
   margin-top: 3px;
 }
+
 .product_widget .widget_radio_entry .square_symbol {
   border-radius: 0px;
 }
+
 .product_widget .widget_radio_entry .radio_symbol .radio_fill,
 .square_symbol .square_fill {
   width: 0.5em;
@@ -431,14 +475,17 @@ export default {
   border-radius: 1em;
   display: none;
 }
+
 .product_widget .widget_radio_entry .radio_symbol .radio_fill.show,
 .square_symbol .square_fill.show {
   display: block;
 }
+
 .product_widget .widget_radio_entry .square_symbol .square_fill span {
   font-weight: bold;
   font-size: 0.8em;
 }
+
 .icon-check:before {
   content: '✓';
   font-size: 14px;
@@ -448,16 +495,19 @@ export default {
   bottom: 0;
   font-weight: 700;
 }
+
 .product_widget .widget_radio_entry .variant_info {
   flex: 1;
   font-weight: 300;
   font-size: 1em;
 }
+
 .product_widget .widget_radio_entry .variant_price {
   flex-shrink: 0;
   color: #6b6b6b;
   font-weight: 300;
 }
+
 .product_widget .max_allowed {
   color: #313131;
   font-weight: 300;
@@ -465,15 +515,18 @@ export default {
   margin-top: -1em;
   margin-bottom: 0.7em;
 }
+
 .if_form_control {
   padding: 1em;
   background: #fbfbfb;
 }
+
 .if_form_control .label {
   font-size: 1em;
   margin-bottom: 0.3em;
   font-weight: bold;
 }
+
 .if_textarea_input {
   padding: 0.7em;
   font-weight: 300;
@@ -486,10 +539,12 @@ export default {
   width: 100%;
   outline: none;
 }
+
 .product_widget .widget_info .options_required_info.optional {
   background: #f1f1f1;
   color: #969696;
 }
+
 .screen_bottom_controls {
   position: fixed;
   width: 100%;
@@ -504,26 +559,32 @@ export default {
   padding: 1em;
   box-sizing: border-box;
 }
+
 .screen_bottom_controls .udapte_controls {
   flex-shrink: 0;
   margin-right: 20px;
 }
+
 .cart_add_remove_controls {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .round_nav_fill:link.inactive {
   cursor: default;
   background: #cccccc;
 }
+
 .round_nav_fill:hover.inactive {
   cursor: default;
   background: #cccccc;
 }
+
 .round_nav_fill:hover {
   color: #feffff;
 }
+
 .round_nav_fill:link {
   text-decoration: none;
   color: #feffff;
@@ -536,16 +597,19 @@ export default {
   justify-content: center;
   font-size: 1em;
 }
+
 .icon-minus:before {
   content: '-';
   font-size: 2em;
   color: #fff;
 }
+
 .icon-plus:before {
   content: '+';
   font-size: 2em;
   color: #fff;
 }
+
 .cart_add_remove_controls .cart_add_info {
   width: 2em;
   text-align: center;
@@ -553,15 +617,18 @@ export default {
   font-size: 1.2em;
   font-weight: bold;
 }
+
 .apt_button.inactive {
   cursor: default;
   background: #cccccc;
 }
+
 .apt_button.primary {
   color: #feffff;
   background: #c9386f;
   box-shadow: none;
 }
+
 .apt_button {
   padding: 0.7em 1.5em;
   border-radius: 0.4em;
@@ -575,9 +642,11 @@ export default {
   font-size: 1em;
   color: #fff;
 }
+
 .screen_bottom_controls .add_to_cart_btn {
   flex: 1;
 }
+
 @media (min-width: 1024px) {
   .modal_content {
     padding-top: 3.5rem;

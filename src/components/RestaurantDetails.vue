@@ -1,20 +1,26 @@
 <template>
   <div v-if="restDetails" class="res-details">
     <div class="res-details-card">
-      <div @click="toggle" class="res-details-card-header">
+      <div
+        @click="toggle"
+        class="res-details-card-header"
+        :style="{
+          backgroundColor: restDetails.backgroundColor || '#fff',
+          borderBottom: `1px solid ${restDetails.textColor || '#000'}`,
+        }"
+      >
         <div class="header-content">
           <p>Table <sub>1</sub></p>
           <div class="name-toggle-wrapper">
-            <h1>{{ restDetails.name }}</h1>
-            <span class="toggle-icon">
+            <h1 :style="{ color: restDetails.textColor || '#000' }">{{ restDetails.name }}</h1>
+            <span class="toggle-icon" :style="{ color: restDetails.textColor || '#000' }">
               <svg
                 v-if="!isOpen"
                 xmlns="http://www.w3.org/2000/svg"
                 width="26"
                 height="30"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="black"
+                stroke="currentColor"
                 stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -27,8 +33,7 @@
                 width="26"
                 height="30"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="black"
+                stroke="currentColor"
                 stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -42,10 +47,13 @@
       <div
         v-show="isOpen"
         class="res-details-card-body"
-        :style="isOpen ? { maxHeight: '1000px' } : { maxHeight: '0' }"
+        :style="{
+          maxHeight: isOpen ? '1000px' : '0',
+          backgroundColor: restDetails.backgroundColor || '#fff',
+        }"
       >
         <dl>
-          <dt class="icon-text">
+          <dt class="icon-text" :style="{ color: restDetails.textColor || '#000' }">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -71,7 +79,7 @@
               </div>
             </div>
           </dt>
-          <dt class="icon-text">
+          <dt class="icon-text" :style="{ color: restDetails.textColor || '#000' }">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -108,7 +116,7 @@
             <a
               :href="`tel:${restDetails.phone}`"
               class="link"
-              :style="{ color: restDetails.primaryColor }"
+              :style="{ color: restDetails.textColor }"
             >
               {{ restDetails.phone }}
             </a>
@@ -439,8 +447,8 @@ export default {
 
 .res-details-card-body {
   padding: 1em;
-  margin: 0 1em;
-  border-radius: 8px;
+  margin: 0em 0em;
+  border-radius: 0px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   max-height: 0;

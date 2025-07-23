@@ -1,18 +1,41 @@
 <template>
   <div class="content_ui" v-if="categories.length">
     <div>
-      <div class="content_items" v-for="category in categories" :key="category._id">
+      <div
+        class="content_items"
+        v-for="category in categories"
+        :key="category._id"
+        :style="{
+          background: `${outlet.backgroundColor}`,
+          color: `${outlet.textColor} !important`,
+        }"
+      >
         <div :id="category._id">
-          <h2 class="content_title" :style="{ borderBottom: `1px solid ${outlet.primaryColor}` }">
+          <h2
+            class="content_title"
+            :style="{
+              borderBottom: `1px solid ${outlet.textColor}`,
+              color: `${outlet.textColor} !important`,
+            }"
+          >
             {{ category.name }}
           </h2>
           <div
             class="sub_category_block"
             v-for="subCategory in category.subCategories.filter((a) => a.menuItems.length)"
             :key="subCategory._id"
+            :style="{
+              color: `${outlet.textColor} !important`,
+            }"
           >
             <div :id="`subCategories-${subCategory._id}`">
-              <h3 v-if="subCategory.menuItems.length" class="content_sub_title">
+              <h3
+                v-if="subCategory.menuItems.length"
+                class="content_sub_title"
+                :style="{
+                  color: `${outlet.textColor} !important`,
+                }"
+              >
                 {{ subCategory.name }}
               </h3>
               <div class="content_item_product-block">
@@ -40,7 +63,14 @@
                         />
                         <span v-if="item.allergenIds.length > 5" class="allergen_more">...</span>
                       </template>
-                      <div class="item_description">{{ item.description }}</div>
+                      <div
+                        class="item_description"
+                        :style="{
+                          color: `${outlet.textColor} !important`,
+                        }"
+                      >
+                        {{ item.description }}
+                      </div>
                       <div class="item_price" v-if="parseFloat(item.price)">
                         <span class="currency_symbol">€ </span>
                         <span class="currency_val">{{ parseFloat(item.price).toFixed(2) }}</span>
@@ -101,16 +131,13 @@
 
 <script>
 import { ref, computed } from 'vue'
-import ProductDescription from '../ProductDescription.vue'
 import CartView from '../CartView.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
 export default {
   props: ['selectedCategory', 'categories', 'outlet'],
-  components: {
-    ProductDescription,
-  },
+
   methods: {
     goToProduct(id) {
       this.$router.push({ name: 'ProductDescription', params: { id: id } })

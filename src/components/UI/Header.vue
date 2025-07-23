@@ -1,6 +1,12 @@
 <template>
   <div ref="pageContainer" class="page-container">
-    <div class="header-section" :class="{ hidden: isHeaderHidden }">
+    <div
+      class="header-section"
+      :class="{ hidden: isHeaderHidden }"
+      :style="{
+        backgroundColor: restDetails ? restDetails.backgroundColor : '#fff',
+      }"
+    >
       <div v-if="restDetails" class="cover-header" :style="headerBackgroundStyle">
         <div class="header-overlay"></div>
         <div class="logo-container" v-if="showLogo">
@@ -10,31 +16,37 @@
     </div>
     <header :class="{ 'sticky-category': isSticky }" ref="categoryHeader" class="category-header">
       <nav>
-        <ul class="menu">
-          <li v-for="item in menuItems" :key="item.id">
-            <button
-              :id="`category-${item._id}`"
-              @click="scrollToSection(item)"
-              :class="{ active: selectedItem && selectedItem === item.id }"
-              :style="getButtonStyle(selectedItem === item.id)"
-            >
-              {{ toTitleCase(item.label) }}
-            </button>
-          </li>
-        </ul>
-        <ul class="menu" v-if="subCategories.length">
-          <li v-for="item in subCategories.filter((a) => a.menuItems.length)" :key="item.id">
-            <button
-              @click="scrollToSubSection(item.id)"
-              :class="{ active: selectedSubCategory && selectedSubCategory === item.id }"
-              :style="getButtonStyle(selectedSubCategory === item.id)"
-              class="sub-category"
-              :id="`sub-category-header-${item.id}`"
-            >
-              {{ toTitleCase(item.label) }}
-            </button>
-          </li>
-        </ul>
+        <div
+          :style="{
+            backgroundColor: restDetails ? restDetails.backgroundColor : '#fff',
+          }"
+        >
+          <ul class="menu">
+            <li v-for="item in menuItems" :key="item.id">
+              <button
+                :id="`category-${item._id}`"
+                @click="scrollToSection(item)"
+                :class="{ active: selectedItem && selectedItem === item.id }"
+                :style="getButtonStyle(selectedItem === item.id)"
+              >
+                {{ toTitleCase(item.label) }}
+              </button>
+            </li>
+          </ul>
+          <ul class="menu" v-if="subCategories.length">
+            <li v-for="item in subCategories.filter((a) => a.menuItems.length)" :key="item.id">
+              <button
+                @click="scrollToSubSection(item.id)"
+                :class="{ active: selectedSubCategory && selectedSubCategory === item.id }"
+                :style="getButtonStyle(selectedSubCategory === item.id)"
+                class="sub-category"
+                :id="`sub-category-header-${item.id}`"
+              >
+                {{ toTitleCase(item.label) }}
+              </button>
+            </li>
+          </ul>
+        </div>
       </nav>
     </header>
   </div>
@@ -80,6 +92,7 @@ const headerBackgroundStyle = computed(() => {
 const getButtonStyle = (isActive) => {
   const primaryColor = props.restDetails?.primaryColor || '#d9534f'
   const backgroundColor = props.restDetails?.backgroundColor || '#ffffff'
+  const textColor = props.restDetails?.textColor || '#000000'
   return {
     backgroundColor: isActive ? primaryColor : '#fff',
     border: !isActive ? `1px solid ${primaryColor}` : 'none',
@@ -271,26 +284,25 @@ function getMostVisibleElementSubCategoriesId() {
 
   return mostVisibleElement ? mostVisibleElement.id : null
 }
-  function getFType() {
-    const fontUrlSplit = props.restDetails.fontUrl.split('.')
- const fType =  props.restDetails.fontUrl
-    ? fontUrlSplit[fontUrlSplit.length - 1]
-    : ''
-    console.log(fType, 'HERE')
-    if (fType === 'otf') {
-      return 'OpenType'
-    } else if (fType === 'ttf') {
-      return 'TrueType'
-    } else {
-      return 'Web Open Font Format'
-    }
-  
+function getFType() {
+  const fontUrlSplit = props.restDetails.fontUrl.split('.')
+  const fType = props.restDetails.fontUrl ? fontUrlSplit[fontUrlSplit.length - 1] : ''
+  console.log(fType, 'HERE')
+  if (fType === 'otf') {
+    return 'OpenType'
+  } else if (fType === 'ttf') {
+    return 'TrueType'
+  } else {
+    return 'Web Open Font Format'
+  }
 }
 
-watch(() => props.restDetails, () => {
-  if (props.restDetails) {
-    const styleSheet = document.createElement('style')
-    styleSheet.textContent = `
+watch(
+  () => props.restDetails,
+  () => {
+    if (props.restDetails) {
+      const styleSheet = document.createElement('style')
+      styleSheet.textContent = `
       @font-face {
         font-family: ${props.restDetails.fontFamily};
         src: url("${props.restDetails.fontUrl}") format("${getFType()}");
@@ -299,11 +311,11 @@ watch(() => props.restDetails, () => {
         font-family: ${props.restDetails.fontFamily};
       }
     `
-    document.head.appendChild(styleSheet)
-  }
-  
-}, { immediate: true })
-
+      document.head.appendChild(styleSheet)
+    }
+  },
+  { immediate: true },
+)
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true })
@@ -329,7 +341,7 @@ nav {
 }
 .category-header {
   background: white;
-  padding: 10px;
+  padding: 0px 0px 1px 0px;
   font-size: 20px;
   font-weight: bold;
   transition: all 0.3s ease;
