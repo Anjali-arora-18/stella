@@ -51,6 +51,7 @@
     </header>
   </div>
 </template>
+
 <script setup>
 import { computed, ref, onMounted, onBeforeUnmount, watch, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
@@ -90,11 +91,11 @@ const headerBackgroundStyle = computed(() => {
 })
 
 const getButtonStyle = (isActive) => {
-  const primaryColor = props.restDetails?.primaryColor || '#d9534f'
-  const backgroundColor = props.restDetails?.backgroundColor || '#ffffff'
-  const textColor = props.restDetails?.textColor || '#000000'
+  const primaryColor = props.restDetails.primaryColor || '#d9534f'
+  const backgroundColor = props.restDetails.backgroundColor || '#ffffff'
+  const textColor = props.restDetails.textColor || '#000000'
   return {
-    backgroundColor: isActive ? primaryColor : '#fff',
+    backgroundColor: isActive ? primaryColor : 'transparent',
     border: !isActive ? `1px solid ${primaryColor}` : 'none',
     color: isActive ? backgroundColor : primaryColor,
     fontWeight: isActive ? 'bold' : '600',
@@ -163,7 +164,7 @@ const scrollToSection = (item) => {
   selectedItem.value = item._id
   const section = document.getElementById(item._id)
   if (section) {
-    let offset = (categoryHeader.value?.offsetHeight || 0) + 10
+    let offset = (categoryHeader.value.offsetHeight || 0) + 10
 
     if (!isSticky.value) {
       offset = 120
@@ -222,6 +223,7 @@ const handleScroll = () => {
     }
   }
 }
+
 function getMostVisibleElementId() {
   // Get all elements with IDs
   const elements = Array.from(document.querySelectorAll('[id]')).filter(
@@ -284,6 +286,7 @@ function getMostVisibleElementSubCategoriesId() {
 
   return mostVisibleElement ? mostVisibleElement.id : null
 }
+
 function getFType() {
   const fontUrlSplit = props.restDetails.fontUrl.split('.')
   const fType = props.restDetails.fontUrl ? fontUrlSplit[fontUrlSplit.length - 1] : ''
@@ -325,20 +328,25 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
 })
 </script>
+
 <style scoped>
 .hidden {
   display: none !important;
 }
+
 nav {
   width: 100%;
   overflow-x: auto;
 }
+
 .category-header nav {
   overflow-x: auto;
 }
+
 .page-container {
   width: 100%;
 }
+
 .category-header {
   background: white;
   padding: 0px 0px 1px 0px;
@@ -364,6 +372,7 @@ nav {
   z-index: 10;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 .logo-container {
   position: absolute;
   top: 50%;
@@ -387,11 +396,13 @@ nav {
   overflow: hidden;
   background-color: white;
 }
+
 .cover-header {
   width: 100%;
   /* height: 100%; */
   /* max-height: 400px; */
-  padding-top: 50%; /* 2:1 Aspect Ratio (i.e., 4:2) */
+  padding-top: 50%;
+  /* 2:1 Aspect Ratio (i.e., 4:2) */
   /* aspect-ratio: 4 / 2; */
   position: relative;
   overflow: hidden !important;
@@ -401,6 +412,7 @@ nav {
   border-bottom-left-radius: 60% 5%;
   border-bottom-right-radius: 60% 5%;
 }
+
 .header-section .cover-header .header-overlay {
   position: absolute;
   top: 0;
@@ -409,6 +421,7 @@ nav {
   width: 100%;
   height: 100%;
 }
+
 .menu {
   list-style: none;
   display: flex;
@@ -430,6 +443,7 @@ nav {
   border-radius: 8px;
   border-bottom: none;
 }
+
 .menu li .sub-category {
   border-radius: 16px;
 }
@@ -447,7 +461,6 @@ nav {
     white-space: nowrap;
     scrollbar-width: none;
   }
-
   /* .category-header::-webkit-scrollbar {
     display: none;
   }
@@ -469,17 +482,14 @@ nav {
     background: #888;
     border-radius: 5px;
   } */
-
   .menu {
     display: flex;
     gap: 10px;
     overflow-x: auto;
   }
-
   .menu li {
     flex-shrink: 0;
   }
-
   .menu li button {
     font-size: 14px;
     white-space: nowrap;
@@ -488,16 +498,15 @@ nav {
     font-size: 12px;
   }
 }
+
 @media (min-width: 1024px) {
   .cover-header {
     background: none !important;
     padding-top: 30%;
   }
-
   .header-overlay {
     display: none !important;
   }
-
   .restaurant-logo {
     width: 140px;
     height: 140px;
@@ -513,20 +522,16 @@ nav {
     scroll-behavior: smooth;
     padding-bottom: 12px;
   }
-
   .menu::-webkit-scrollbar {
     height: 4px;
   }
-
   .menu::-webkit-scrollbar-track {
     background: transparent;
   }
-
   .menu::-webkit-scrollbar-thumb {
     background-color: #bbb;
     border-radius: 4px;
   }
-
   .menu li {
     flex-shrink: 0;
   }
@@ -554,6 +559,7 @@ nav {
     }
   }
 }
+
 @media (min-width: 768px) and (max-width: 1024px) {
   .category-header {
     overflow-x: auto;
@@ -572,11 +578,9 @@ nav {
   .menu::-webkit-scrollbar {
     height: 4px;
   }
-
   .menu::-webkit-scrollbar-track {
     background: transparent;
   }
-
   .menu::-webkit-scrollbar-thumb {
     background: #aaa;
     border-radius: 4px;
