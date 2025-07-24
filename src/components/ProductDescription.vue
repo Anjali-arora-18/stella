@@ -236,31 +236,10 @@ export default {
 </script>
 
 <style scoped>
-.modal_overlay {
-  /* position: fixed;
-  z-index: 1000;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; */
-  /* background: #f7f7f7; */
-  /* display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  transition: opacity 0.5s ease-in-out;
-  overflow: hidden; */
-}
-
 .modal_content {
-  /* position: absolute;
-  bottom: 0;
-  left: 0; */
   width: 100%;
   height: 100vh;
-  /* display: flex;
-  flex-direction: column; */
   background: white;
-  /* transform: translateY(100%); */
   animation: slideUp 0.5s ease-in-out forwards;
   overflow: hidden;
 }
@@ -321,38 +300,23 @@ export default {
 }
 
 .modal_image {
-  /* position: absolute; */
-  /* top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; */
   display: block;
   width: 100%;
   height: auto;
   object-fit: cover;
-  /* aspect-ratio: 1; */
 }
 
 .modal_content_info {
-  /* padding-bottom: 5em; */
-  /* flex: 1; */
-  /* overflow-y: auto; */
-  /* height: 100%; */
-  /* position: relative; */
   background: #f7f7f7;
 }
 
 .modal_content_info > div:first-child {
-  /* width: 100%; */
-  /* max-height: 100vw; */
-  /* overflow: hidden; */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)) !important;
 }
 
 .product_info {
   overflow: hidden;
   border-bottom: solid 1px #f2f2f2;
-  /* background: #fbfbfb; */
   padding: 1em;
   font-weight: bold;
   box-sizing: border-box;

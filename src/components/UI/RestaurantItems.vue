@@ -233,7 +233,7 @@ export default {
   margin-top: 0px !important;
 }
 .content_items {
-  margin-bottom: 20px;
+  margin-bottom: 0.9em;
   background: #fbfbfb;
   padding: 1em;
 }

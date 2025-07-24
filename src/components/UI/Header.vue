@@ -17,6 +17,7 @@
     <header :class="{ 'sticky-category': isSticky }" ref="categoryHeader" class="category-header">
       <nav>
         <div
+          class="nav_header"
           :style="{
             backgroundColor: restDetails ? restDetails.backgroundColor : '#fff',
           }"
@@ -337,6 +338,9 @@ onBeforeUnmount(() => {
 nav {
   width: 100%;
   overflow-x: auto;
+}
+.nav_header {
+  padding: 10px;
 }
 
 .category-header nav {
