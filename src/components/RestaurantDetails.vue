@@ -18,7 +18,7 @@
                 v-if="!isOpen"
                 xmlns="http://www.w3.org/2000/svg"
                 width="26"
-                height="30"
+                height="26"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 stroke-width="1.5"
